@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("test")
 public class TestController {
 
     @Resource

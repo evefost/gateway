@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/v1/test")
 public class TestController {
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
     public String addCompose() {
-        return "serverB info";
+        return "serverA info v1";
     }
 
 }

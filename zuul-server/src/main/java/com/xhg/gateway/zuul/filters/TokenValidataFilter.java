@@ -77,16 +77,16 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
 
     @Override
     public Object run() {
-        String token = parseToken();
-        if (token == null) {
-            forbidden();
-            return null;
-        } else {
-            AuthoInfo check = authorizeService.check(token);
-            if (check == null) {
-                forbidden();
-            }
-        }
+//        String token = parseToken();
+//        if (token == null) {
+//            forbidden();
+//            return null;
+//        } else {
+//            AuthoInfo check = authorizeService.check(token);
+//            if (check == null) {
+//                forbidden();
+//            }
+//        }
         return null;
     }
 
