@@ -31,38 +31,38 @@ zuul:
   # 开启重试
   retryable: true
   # 路径前面加一个前缀
-  prefix: /api
+#  prefix: /api
   # 不代理某些服务，有些服务不对外公布，就可以在这里忽略掉
   # 比如sms-interface，我们不对外开放，可以在这里忽略掉，不然zuul从eureka获取到后就可以进行代理,多个用"," 分割
-  ignored-services: internal-server
+  ignored-services:
   # hystrix 隔离策略，默认信号量(因为zuul中大量用到线程变量)。优先级要高过在hystrix中配置；
   ribbonIsolationStrategy: SEMAPHORE
   semaphore:
     # 信号量模式下，最大并发量。优先级要高过在hystrix中配置；
     maxSemaphores: 100
-
-####################这里开始是路由配置###################################
-# 通过配置文件配置的静态路由
-  routes:
-    server-a-route:
-       path: /test/**
-       serviceId: servera
-
-
-####################结束路由配置###################################
-
-####################这里开始是filter相关配置###################################
-  # 禁用springcloud自带的errorfilter
-  SendErrorFilter:
-    error:
-      disable: false
-  # 开启自定义的token校验filter
-  TokenValidataFilter:
-    pre:
-      disable: false
-####################filter配置结束###################################
-
-
+#
+#####################这里开始是路由配置###################################
+## 通过配置文件配置的静态路由
+#  routes:
+#    servera:
+#       path: /test/**
+#       serviceId: servera
+#
+#
+#####################结束路由配置###################################
+#
+#####################这里开始是filter相关配置###################################
+#  # 禁用springcloud自带的errorfilter
+#  SendErrorFilter:
+#    error:
+#      disable: false
+#  # 开启自定义的token校验filter
+#  TokenValidataFilter:
+#    pre:
+#      disable: false
+#####################filter配置结束###################################
+#
+#
 ribbon:
   # 配置ribbon默认的超时时间
   ConnectTimeout: 5000
@@ -75,8 +75,8 @@ ribbon:
   MaxAutoRetries: 0
   eureka:
     enabled: true
-
-########hystrix相关配置
+#
+#########hystrix相关配置
 hystrix:
   command:
     # 这是默认的配置

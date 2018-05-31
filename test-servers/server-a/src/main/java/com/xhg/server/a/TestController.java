@@ -4,6 +4,7 @@ import com.xhg.gateway.api.authorize.AuthRequest;
 import com.xhg.gateway.api.authorize.AuthoInfo;
 import com.xhg.gateway.api.authorize.AuthorizeService;
 import com.xhg.test.common.UserBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +19,15 @@ import javax.annotation.Resource;
 @RequestMapping("test")
 public class TestController {
 
+    @Value("${server.port}")
+    private String port;
+
     @Resource
     private AuthorizeService authorizeService;
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
     public String queryInfo() {
-        return "serverA info";
+        return "serverA info v0 "+port;
     }
 
     @RequestMapping(value = "getUser",method = RequestMethod.GET)

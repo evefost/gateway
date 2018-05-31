@@ -35,7 +35,14 @@ public class ZuulApplication {
 	public PatternServiceRouteMapper serviceRouteMapper() {
 		return new PatternServiceRouteMapper(
 				"(?<name>^.+)-(?<version>v.+$)",
-				"${version}/${name}");
+				"${name}/${version}"){
+			@Override
+			public String apply(final String serviceId) {
+				String route =  super.apply(serviceId);
+				System.out.println(serviceId + " -> " +route);
+				return route;
+			}
+		};
 	}
 
 //	@Bean
