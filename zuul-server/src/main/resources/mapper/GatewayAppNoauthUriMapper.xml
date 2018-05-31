@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhg.gateway.mapper.GatewayAppNoauthUriMapper">
+
+
+
+    <select id="queryList" resultType="com.xhg.gateway.vo.AppNoauthUriVo">
+        SELECT
+        anu.id,
+        anu.app_id appId,
+        anu.url,
+        anu.description,
+        anu.enable,
+        app.`name` appName,
+        app.service_id serviceId,
+        app.context_path contextPath
+        FROM
+        gateway_app_noauth_uri anu
+        LEFT JOIN gateway_app app ON app.id = anu.app_id
+        WHERE 1=1
+        <if test="params.appId !=null">
+            AND anu.app_id=#{params.appId}
+        </if>
+        <if test="params.enable !=null">
+            AND anu.enable=#{params.enable}
+        </if>
+
+    </select>
+</mapper>

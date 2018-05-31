@@ -1,0 +1,10 @@
+info:
+  name: 服务C
+  contact: 服务C
+
+server:
+  port: 9003
+
+spring:
+  application:
+    name: server-c
