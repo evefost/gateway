@@ -3,8 +3,8 @@ info:
   contact: 服务B
 
 server:
-  port: 9003
+  port: 9002
 
 spring:
   application:
-    name: servera-v1
+    name: server-b

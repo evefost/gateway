@@ -12,6 +12,12 @@ public interface AppManagerService {
     List<String> disableServiceList();
 
     /**
+     * 无需受权服务列表
+     * @return
+     */
+    List<String> noAuthoServiceList();
+
+    /**
      * 非受权资源列表
      * key:serviceId,value：uris
      * @return

@@ -14,10 +14,12 @@ import com.xhg.gateway.service.Oauth2ClientService;
 import com.xhg.gateway.vo.Oauth2ClientVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.netflix.zuul.filters.discovery.PatternServiceRouteMapper;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.JedisCluster;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -33,6 +35,8 @@ public class AuthorizeServiceImpl implements AuthorizeService, ApplicationListen
 
     protected  final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final String SPILT="-";
+
     private ConcurrentHashMap<String, AuthoInfo> loginInfo = new ConcurrentHashMap<>();
 
     private ConcurrentHashMap<String, String> clientServices = new ConcurrentHashMap<>();
@@ -40,6 +44,11 @@ public class AuthorizeServiceImpl implements AuthorizeService, ApplicationListen
     @Resource
     private Oauth2ClientService oauth2ClientService;
 
+    @Resource
+    PatternServiceRouteMapper routeMapper;
+
+    @Resource
+    private JedisCluster jedisCluster;
 
     @PostConstruct
     public void init() {
@@ -80,7 +89,8 @@ public class AuthorizeServiceImpl implements AuthorizeService, ApplicationListen
         authoInfo.setToken(token);
         String clientId = authRequest.getClientId();
         String serviceId = clientServices.get(clientId);
-        loginInfo.put(serviceId+token,authoInfo);
+        loginInfo.put(serviceId+SPILT+token,authoInfo);
+        jedisCluster.set(serviceId+SPILT+token,token);
         return authoInfo;
     }
 
@@ -88,7 +98,7 @@ public class AuthorizeServiceImpl implements AuthorizeService, ApplicationListen
     public boolean logout( String clientId,String accessToken) {
         logger.info("用户登出clientId[{}]accessToken[{}]", clientId);
         String serviceId = clientServices.get(clientId);
-        AuthoInfo remove = loginInfo.remove(serviceId + accessToken);
+        AuthoInfo remove = loginInfo.remove(serviceId +SPILT+ accessToken);
         return remove!=null;
     }
 
@@ -96,7 +106,12 @@ public class AuthorizeServiceImpl implements AuthorizeService, ApplicationListen
     public AuthoInfo check(String accessToken) {
         RequestContext ctx = RequestContext.getCurrentContext();
         String serviceId = (String) ctx.get(SERVICE_ID_KEY);
-        return loginInfo.get(serviceId+accessToken);
+        //多版本处理
+        String apply = routeMapper.apply(serviceId);
+        if(apply.contains("/")){
+            serviceId = apply.substring(0,apply.indexOf("/"));
+        }
+        return loginInfo.get(serviceId+SPILT+accessToken);
     }
 
 

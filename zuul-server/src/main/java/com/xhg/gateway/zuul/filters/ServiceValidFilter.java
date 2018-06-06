@@ -7,7 +7,7 @@ import com.xhg.gateway.api.AppInfo;
 import com.xhg.gateway.api.AppManagerService;
 import com.xhg.gateway.api.event.GateWayEvent;
 import com.xhg.gateway.api.event.RefreshEvent;
-import com.xhg.gateway.api.event.ServiceChangeEvent;
+import com.xhg.gateway.api.event.AppChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -94,8 +94,8 @@ public class ServiceValidFilter extends ZuulFilter implements ApplicationListene
 
     @Override
     public void onApplicationEvent(GateWayEvent event) {
-        if(event instanceof ServiceChangeEvent ){
-            ServiceChangeEvent changeEvent = (ServiceChangeEvent) event;
+        if(event instanceof AppChangeEvent){
+            AppChangeEvent changeEvent = (AppChangeEvent) event;
             AppInfo data = changeEvent.getData();
             logger.debug("收到服务信息修改:{}/operateStatus:{}",data.getServiceId(),data.getOperateStatus());
             refresh();

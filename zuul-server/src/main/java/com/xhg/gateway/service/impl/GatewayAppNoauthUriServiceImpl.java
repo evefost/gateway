@@ -3,6 +3,7 @@ package com.xhg.gateway.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.netflix.discovery.DiscoveryClient;
 import com.xhg.gateway.bo.AppUriBo;
 import com.xhg.gateway.api.OperateStatus;
 import com.xhg.gateway.api.UriInfo;
@@ -14,10 +15,13 @@ import com.xhg.gateway.mapper.GatewayAppNoauthUriMapper;
 import com.xhg.gateway.query.AppUriQy;
 import com.xhg.gateway.service.GatewayAppNoauthUriService;
 import com.xhg.gateway.service.GatewayAppService;
+import com.xhg.gateway.service.RefreshConfigService;
 import com.xhg.gateway.util.BeanUtils;
 import com.xhg.gateway.vo.AppNoauthUriVo;
 import com.xhg.gateway.vo.PagerResult;
 import org.springframework.beans.BeansException;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
@@ -37,13 +41,19 @@ import java.util.List;
 @Service
 public class GatewayAppNoauthUriServiceImpl extends ServiceImpl<GatewayAppNoauthUriMapper, GatewayAppNoauthUri> implements GatewayAppNoauthUriService,ApplicationContextAware {
 
+    private ApplicationContext applicationContext;
+
     @Resource
     private GatewayAppNoauthUriMapper appNoauthUriMapper;
 
     @Resource
     private GatewayAppService appService;
 
-    private ApplicationContext applicationContext;
+    @Resource
+    EurekaDiscoveryClient discoveryClient;
+
+    @Resource
+    private RefreshConfigService refreshConfigService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -91,15 +101,6 @@ public class GatewayAppNoauthUriServiceImpl extends ServiceImpl<GatewayAppNoauth
         return result;
     }
 
-    private void publishChangeEvent(Integer id,OperateStatus operateStatus){
-        GatewayAppNoauthUri uri = selectById(id);
-        UriInfo uriInfo = new UriInfo();
-        uriInfo.setAppId(uri.getAppId());
-        uriInfo.setUrl(uri.getUrl());
-        uriInfo.setOperateStatus(operateStatus);
-        UriChangeEvent event = new UriChangeEvent(this,uriInfo);
-        applicationContext.publishEvent(event);
-    }
 
     private void checkUri(AppUriBo params) {
         EntityWrapper<GatewayAppNoauthUri> ew = new EntityWrapper<>();
@@ -126,6 +127,20 @@ public class GatewayAppNoauthUriServiceImpl extends ServiceImpl<GatewayAppNoauth
         result.setCurrentPage(page.getCurrent());
         result.setPageSize(page.getSize());
         return result;
+    }
+
+
+
+    private void publishChangeEvent(Integer id,OperateStatus operateStatus){
+        GatewayAppNoauthUri uri = selectById(id);
+        UriInfo uriInfo = new UriInfo();
+        uriInfo.setAppId(uri.getAppId());
+        uriInfo.setUrl(uri.getUrl());
+        uriInfo.setOperateStatus(operateStatus);
+        UriChangeEvent event = new UriChangeEvent(this,uriInfo);
+        applicationContext.publishEvent(event);
+        refreshConfigService.syncRefresh(event);
+
     }
 
 

@@ -6,12 +6,13 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.xhg.gateway.bo.AppBo;
 import com.xhg.gateway.api.AppInfo;
 import com.xhg.gateway.api.OperateStatus;
-import com.xhg.gateway.api.event.ServiceChangeEvent;
+import com.xhg.gateway.api.event.AppChangeEvent;
 import com.xhg.gateway.entity.GatewayApp;
 import com.xhg.gateway.exception.XhgException;
 import com.xhg.gateway.mapper.GatewayAppMapper;
 import com.xhg.gateway.query.AppQy;
 import com.xhg.gateway.service.GatewayAppService;
+import com.xhg.gateway.service.RefreshConfigService;
 import com.xhg.gateway.util.BeanUtils;
 import com.xhg.gateway.vo.AppVo;
 import com.xhg.gateway.vo.PagerResult;
@@ -23,6 +24,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +43,8 @@ public class GatewayAppServiceImpl extends ServiceImpl<GatewayAppMapper, Gateway
 
     private ApplicationContext applicationContext;
 
-//    @Resource
-//    private DiscoveryClient discoveryClient;
+    @Resource
+    private RefreshConfigService refreshConfigService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -89,10 +91,10 @@ public class GatewayAppServiceImpl extends ServiceImpl<GatewayAppMapper, Gateway
         AppInfo appInfo = new AppInfo();
         appInfo.setServiceId(serviceId);
         appInfo.setOperateStatus(status);
-        ServiceChangeEvent event = new ServiceChangeEvent(this,appInfo);
+        AppChangeEvent event = new AppChangeEvent(this,appInfo);
         applicationContext.publishEvent(event);
         //同步通知其它gateway-service
-
+        refreshConfigService.syncRefresh(event);
     }
 
 

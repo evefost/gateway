@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-05-31 18:30:10
+Date: 2018-06-01 20:23:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,17 +28,18 @@ CREATE TABLE `gateway_app` (
   `enable` tinyint(4) DEFAULT '0' COMMENT '1,启用服务，0禁用服务',
   `context_path` varchar(48) DEFAULT NULL COMMENT '应用根路径',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of gateway_app
 -- ----------------------------
-INSERT INTO `gateway_app` VALUES ('1', 'server-a', 'servaeaaa', '666666', '22', '0', '/a-path');
+INSERT INTO `gateway_app` VALUES ('1', 'server-a', 'servaeaaa', '666666', '22', '1', '/a-path');
 INSERT INTO `gateway_app` VALUES ('3', 'server-b', 'servaeaaa', '666666', '14', '0', '');
 INSERT INTO `gateway_app` VALUES ('5', 'server-c', 'servaeaaa', '666666', '14', '0', null);
 INSERT INTO `gateway_app` VALUES ('8', 'xhg-boss', '小黄狗boss系统', '小黄狗boss系统', '0', '1', '');
 INSERT INTO `gateway_app` VALUES ('9', 'xhg-customer', '小黄狗customer', '小黄狗customer', '0', '1', '/customer');
 INSERT INTO `gateway_app` VALUES ('10', 'xhg-merchant', 'xhg-merchant', '666666', '0', '1', '/merchant');
+INSERT INTO `gateway_app` VALUES ('11', 'xhg-gateway', 'xhg-gateway', '666666', '0', '-1', '/gateway');
 
 -- ----------------------------
 -- Table structure for gateway_app_noauth_uri
@@ -51,7 +52,7 @@ CREATE TABLE `gateway_app_noauth_uri` (
   `description` varchar(128) DEFAULT NULL COMMENT 'uri作用描述',
   `enable` tinyint(4) DEFAULT '1' COMMENT '1,启用(非受权uri生效)，0禁用',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of gateway_app_noauth_uri
@@ -62,6 +63,8 @@ INSERT INTO `gateway_app_noauth_uri` VALUES ('7', '8', '/boss/manager/user/dolog
 INSERT INTO `gateway_app_noauth_uri` VALUES ('9', '1', '/test/login', 'server-a的登录接口', '1');
 INSERT INTO `gateway_app_noauth_uri` VALUES ('10', '9', '/v1.0/user/login', '登录接口', '1');
 INSERT INTO `gateway_app_noauth_uri` VALUES ('11', '10', '/v1.0/login', 'dfdfdfd', '1');
+INSERT INTO `gateway_app_noauth_uri` VALUES ('12', '11', '/cms2terminal/admin-login', 'dfdfdfd', '1');
+INSERT INTO `gateway_app_noauth_uri` VALUES ('13', '8', '/boss/user/get-userinfo', 'dfdfdfd', '1');
 
 -- ----------------------------
 -- Table structure for oauth2_client
@@ -90,7 +93,7 @@ CREATE TABLE `oauth2_client` (
 -- ----------------------------
 -- Records of oauth2_client
 -- ----------------------------
-INSERT INTO `oauth2_client` VALUES ('1', 'boss系统', 'xhg-bosss', '66666', null, null, null, null, null, null, null, null, null, null, '0');
+INSERT INTO `oauth2_client` VALUES ('1', 'boss系统', 'xhg-boss', '123456', '8', null, null, null, null, null, null, null, null, null, '0');
 INSERT INTO `oauth2_client` VALUES ('2', 'server-a服务', 'server-a', '123456', '1', null, null, null, null, null, null, null, null, null, '0');
 INSERT INTO `oauth2_client` VALUES ('3', 'xhg-customer', 'xhg-customer', '123456', '9', null, null, null, null, null, null, null, null, null, '0');
 INSERT INTO `oauth2_client` VALUES ('4', 'xhg-merchant', 'xhg-merchant', '123456', '10', null, null, null, null, null, null, null, null, null, '0');

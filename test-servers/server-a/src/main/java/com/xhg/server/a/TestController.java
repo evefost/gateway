@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
-@RequestMapping("test")
+@RequestMapping("/test")
 public class TestController {
 
     @Value("${server.port}")
@@ -27,7 +27,7 @@ public class TestController {
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
     public String queryInfo() {
-        return "serverA info v0 "+port;
+        return "serverA info:"+port;
     }
 
     @RequestMapping(value = "getUser",method = RequestMethod.GET)
@@ -40,10 +40,10 @@ public class TestController {
     public String getUser(String name) {
         UserBean userBean =  new UserBean();
         userBean.setName(name);
-        AuthRequest authRequest = new AuthRequest("server-a","123456");
+        AuthRequest authRequest = new AuthRequest("server-a","123456","1233333");
         AuthoInfo authorize = authorizeService.authorize(authRequest);
         if(authorize.getCode()==1){
-            return "网关认证成功token:"+authorize.getToken();
+            return "v0"+port+ "网关认证成功token:"+authorize.getToken();
         }
         return "网关认证的失败:"+authorize.getMessage();
     }

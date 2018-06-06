@@ -7,10 +7,12 @@ import com.xhg.gateway.entity.GatewayApp;
 import com.xhg.gateway.query.AppUriQy;
 import com.xhg.gateway.service.GatewayAppNoauthUriService;
 import com.xhg.gateway.service.GatewayAppService;
+import com.xhg.gateway.service.RefreshConfigService;
 import com.xhg.gateway.vo.AppNoauthUriVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.cloud.netflix.zuul.filters.discovery.PatternServiceRouteMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,10 @@ import java.util.Map;
 
 @Service
 public class AppManagerServiceImpl implements AppManagerService , ApplicationContextAware {
+
     protected  final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private ApplicationContext applicationContext;
 
     @Resource
     private GatewayAppService gatewayAppService;
@@ -32,7 +37,9 @@ public class AppManagerServiceImpl implements AppManagerService , ApplicationCon
     @Resource
     private GatewayAppNoauthUriService noauthUriService;
 
-    private ApplicationContext applicationContext;
+
+    @Resource
+    private RefreshConfigService refreshConfigService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -44,6 +51,18 @@ public class AppManagerServiceImpl implements AppManagerService , ApplicationCon
     public List<String> disableServiceList() {
         EntityWrapper<GatewayApp> ew = new EntityWrapper<>();
         ew.eq("enable", 0);
+        List<GatewayApp> gatewayApps = gatewayAppService.selectList(ew);
+        List<String> services = new ArrayList<>(gatewayApps.size());
+        for (GatewayApp gatewayApp : gatewayApps) {
+            services.add(gatewayApp.getServiceId());
+        }
+        return services;
+    }
+
+    @Override
+    public List<String> noAuthoServiceList() {
+        EntityWrapper<GatewayApp> ew = new EntityWrapper<>();
+        ew.eq("enable", -1);
         List<GatewayApp> gatewayApps = gatewayAppService.selectList(ew);
         List<String> services = new ArrayList<>(gatewayApps.size());
         for (GatewayApp gatewayApp : gatewayApps) {
@@ -79,7 +98,7 @@ public class AppManagerServiceImpl implements AppManagerService , ApplicationCon
         logger.info("发送刷新网置设置事件");
         RefreshEvent event = new RefreshEvent(this);
         applicationContext.publishEvent(event);
-        //todo 集群应同步事件到其它网关节点
+        refreshConfigService.syncRefresh(event);
     }
 
 

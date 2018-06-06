@@ -30,10 +30,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SERVICE_ID_KEY;
@@ -52,7 +51,17 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
     @Resource
     private AuthorizeService authorizeService;
 
-    private volatile Map<String, List<String>> noAuthServerUris = new HashMap<>();
+    /**
+     * 非受权服务ids
+     */
+    private volatile List<String> noServicIds = new ArrayList<>();
+
+    /**
+     * 非受权url
+     */
+    private volatile Map<String, List<String>> noAuthServerUris = new ConcurrentHashMap<>();
+
+
 
     PathMatcher pathMatcher = new AntPathMatcher();
 
@@ -72,21 +81,22 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
+        logger.info("sessionId========:{}",ctx.getRequest().getSession().getId());
         return isNeedAuthentication(ctx);
     }
 
     @Override
     public Object run() {
-//        String token = parseToken();
-//        if (token == null) {
-//            forbidden();
-//            return null;
-//        } else {
-//            AuthoInfo check = authorizeService.check(token);
-//            if (check == null) {
-//                forbidden();
-//            }
-//        }
+        String token = parseToken();
+        if (StringUtils.isEmpty(token)) {
+            forbidden("无访问权限,需登录");
+            return null;
+        } else {
+            AuthoInfo check = authorizeService.check(token);
+            if (check == null) {
+                forbidden("登录信息无效");
+            }
+        }
         return null;
     }
 
@@ -94,7 +104,7 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
         logger.debug("parseToken");
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        String token = request.getHeader("access-token");
+        String token = request.getHeader("token");
         if(!StringUtils.isEmpty(token)){
             return token;
         }
@@ -114,6 +124,11 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
                 }
             }
         }
+
+        if(token == null){
+            token =  request.getSession().getId();
+
+        }
         return token;
     }
 
@@ -128,8 +143,8 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
                 sb.append(lineStr);
             }
             return sb.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("网关解释body出错:{}",e);
             if(br != null){
                 try {
                     br.close();
@@ -143,7 +158,7 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
     }
 
     // 设置response的状态码为403
-    void forbidden() {
+    void forbidden(String message) {
         logger.warn("请求无访问权限");
         RequestContext currentContext = RequestContext.getCurrentContext();
         currentContext.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
@@ -152,7 +167,7 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
         responseVo.setCode(1);
         RsBody rb = new RsBody();
         rb.setCode(HttpStatus.FORBIDDEN.value());
-        rb.setMessage("无访问权限");
+        rb.setMessage(message);
         responseVo.setResponseBody(rb);
         currentContext.remove(SERVICE_ID_KEY);
         currentContext.setResponseBody(JSON.toJSONString(responseVo));
@@ -172,22 +187,29 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
     }
 
 
-    private void refresh() {
+    private synchronized void refresh() {
         logger.debug("刷新非受限资源列表");
+        List<String> serviceList = appManagerService.noAuthoServiceList();
+        noServicIds = serviceList;
         Map<String, List<String>> serviceUris = appManagerService.noAuthUriList();
         if (!serviceUris.isEmpty()) {
             noAuthServerUris = serviceUris;
         }
+
     }
 
 
     public boolean isNeedAuthentication(RequestContext context) {
         String requestURI = (String) context.get("requestURI");
         String serviceId = (String) context.get(SERVICE_ID_KEY);
+
         if (serviceId == null) {
             //return !noAuthenticationRoutes.contains(requestURI);
             return false;
         } else {
+            if(noServicIds.contains(serviceId)){
+                return false;
+            }
             Set<Map.Entry<String, List<String>>> entries = noAuthServerUris.entrySet();
             for (Map.Entry<String, List<String>> entry : entries) {
                 List<String> values = entry.getValue();
