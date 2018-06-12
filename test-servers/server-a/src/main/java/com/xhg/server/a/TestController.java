@@ -1,8 +1,8 @@
 package com.xhg.server.a;
 
-import com.xhg.gateway.api.authorize.AuthRequest;
-import com.xhg.gateway.api.authorize.AuthoInfo;
-import com.xhg.gateway.api.authorize.AuthorizeService;
+import com.xie.gateway.api.authorize.AuthRequest;
+import com.xie.gateway.api.authorize.AuthoInfo;
+import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xhg.test.common.UserBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
