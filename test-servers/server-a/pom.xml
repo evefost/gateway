@@ -9,17 +9,17 @@
         <relativePath />
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.xhg</groupId>
+    <groupId>com.xie.java</groupId>
     <artifactId>server-a</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
-            <groupId>com.xhg</groupId>
+            <groupId>com.xie.java</groupId>
             <artifactId>gateway-core-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.xhg</groupId>
+            <groupId>com.xie.java</groupId>
             <artifactId>test-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -40,11 +40,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.xhg</groupId>
-            <artifactId>gateway-core-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>

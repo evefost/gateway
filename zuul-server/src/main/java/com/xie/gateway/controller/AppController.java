@@ -2,15 +2,14 @@ package com.xie.gateway.controller;
 
 
 import com.xie.gateway.api.AppInfo;
+import com.xie.gateway.api.AppManagerService;
 import com.xie.gateway.api.UriInfo;
-import com.xhg.gateway.api.event.AppChangeEvent;
+import com.xie.gateway.api.event.AppChangeEvent;
 import com.xie.gateway.api.event.UriChangeEvent;
 import com.xie.gateway.bo.AppBo;
-import com.xie.gateway.api.AppManagerService;
 import com.xie.gateway.entity.GatewayApp;
 import com.xie.gateway.query.AppQy;
 import com.xie.gateway.service.GatewayAppService;
-import com.xhg.gateway.service.RefreshConfigService;
 import com.xie.gateway.vo.AppVo;
 import com.xie.gateway.vo.PagerResult;
 import com.xie.gateway.vo.ResponseBean;
@@ -19,7 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;

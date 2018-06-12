@@ -7,7 +7,6 @@ import com.xie.gateway.entity.GatewayApp;
 import com.xie.gateway.query.AppUriQy;
 import com.xie.gateway.service.GatewayAppNoauthUriService;
 import com.xie.gateway.service.GatewayAppService;
-import com.xhg.gateway.service.RefreshConfigService;
 import com.xie.gateway.vo.AppNoauthUriVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,7 @@ public class AppManagerServiceImpl implements AppManagerService , ApplicationCon
 
 
     @Resource
-    private RefreshConfigService refreshConfigService;
+    private RefreshConfigServiceImpl refreshConfigService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

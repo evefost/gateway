@@ -14,7 +14,6 @@ import com.xie.gateway.mapper.GatewayAppNoauthUriMapper;
 import com.xie.gateway.query.AppUriQy;
 import com.xie.gateway.service.GatewayAppNoauthUriService;
 import com.xie.gateway.service.GatewayAppService;
-import com.xhg.gateway.service.RefreshConfigService;
 import com.xie.gateway.util.BeanUtils;
 import com.xie.gateway.vo.AppNoauthUriVo;
 import com.xie.gateway.vo.PagerResult;
@@ -51,7 +50,7 @@ public class GatewayAppNoauthUriServiceImpl extends ServiceImpl<GatewayAppNoauth
     EurekaDiscoveryClient discoveryClient;
 
     @Resource
-    private RefreshConfigService refreshConfigService;
+    private RefreshConfigServiceImpl refreshConfigService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

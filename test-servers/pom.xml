@@ -7,12 +7,11 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>test-servers</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <groupId>com.xhg</groupId>
+    <groupId>com.xie.java</groupId>
     <packaging>pom</packaging>
 
     <modules>
         <module>server-a</module>
-        <module>server-a-v1</module>
         <module>server-b</module>
         <module>server-c</module>
         <module>test-common</module>

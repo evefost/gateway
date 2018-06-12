@@ -9,13 +9,13 @@
         <relativePath />
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.xhg</groupId>
+    <groupId>com.xie.java</groupId>
     <artifactId>server-c</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.xhg</groupId>
+            <groupId>com.xie.java</groupId>
             <artifactId>test-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

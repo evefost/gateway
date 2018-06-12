@@ -2,11 +2,11 @@ package com.xie.gateway.api.event;
 
 import com.xie.gateway.api.AppInfo;
 
-public class ServiceChangeEvent extends GateWayEvent {
+public class AppChangeEvent extends GateWayEvent {
 
     private AppInfo data;
 
-    public ServiceChangeEvent(Object source, AppInfo data) {
+    public AppChangeEvent(Object source, AppInfo data) {
         super(source);
         this.data = data;
     }
