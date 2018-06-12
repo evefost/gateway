@@ -1,7 +1,7 @@
 package com.xie.gateway.controller;
 
-import com.xie.gateway.vo.ResponseVo;
-import com.xie.gateway.vo.RsBody;
+
+import com.xie.gateway.vo.ResponseBean;
 import org.springframework.boot.autoconfigure.web.BasicErrorController;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -31,14 +31,10 @@ public class PageErrorController extends BasicErrorController {
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         Map body = this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = this.getStatus(request);
-        ResponseVo responseVo = new ResponseVo();
-        responseVo.setCode(1);
-        RsBody rb = new RsBody();
-        rb.setCode(status.value());
-        rb.setMessage(body.get("error").toString());
-        responseVo.setResponseBody(rb);
+        ResponseBean<Object> error = ResponseBean.failure(body.get("error").toString());
 
-        return new ResponseEntity(responseVo, status);
+
+        return new ResponseEntity(error, status);
     }
 
     @Override

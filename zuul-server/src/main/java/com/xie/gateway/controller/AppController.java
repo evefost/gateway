@@ -16,6 +16,7 @@ import com.xie.gateway.vo.ResponseBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,9 @@ public class AppController extends BaseController implements ApplicationContextA
 
     @Resource
     GatewayAppService appService;
+
+    @Resource
+    RibbonCommandFactory  factory;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

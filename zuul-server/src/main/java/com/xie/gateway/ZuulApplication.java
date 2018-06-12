@@ -13,6 +13,7 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.filters.discovery.PatternServiceRouteMapper;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import redis.clients.jedis.HostAndPort;
@@ -22,11 +23,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@SpringBootApplication()
+@SpringBootApplication(scanBasePackages = {"com.xie"})
 @EnableEurekaClient
 @EnableZuulProxy
 @EnableCircuitBreaker
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 public class ZuulApplication {
 	final static Logger logger = LoggerFactory.getLogger(ZuulApplication.class);
 	//static JedisConnection sss = new JedisConnection(null);

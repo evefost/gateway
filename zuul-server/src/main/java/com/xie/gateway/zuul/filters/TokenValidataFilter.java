@@ -11,8 +11,7 @@ import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xie.gateway.api.event.GateWayEvent;
 import com.xie.gateway.api.event.RefreshEvent;
 import com.xie.gateway.api.event.UriChangeEvent;
-import com.xie.gateway.vo.ResponseVo;
-import com.xie.gateway.vo.RsBody;
+import com.xie.gateway.vo.ResponseBean;
 import com.xie.gateway.zuul.ZuulConfigurationBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,14 +159,10 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
         RequestContext currentContext = RequestContext.getCurrentContext();
         currentContext.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
         //清掉服务id将不再待下走了
-        ResponseVo responseVo = new ResponseVo();
-        responseVo.setCode(1);
-        RsBody rb = new RsBody();
-        rb.setCode(HttpStatus.FORBIDDEN.value());
-        rb.setMessage(message);
-        responseVo.setResponseBody(rb);
+
+        ResponseBean<Object> failure = ResponseBean.failure(HttpStatus.FORBIDDEN.value(), message);
         currentContext.remove(SERVICE_ID_KEY);
-        currentContext.setResponseBody(JSON.toJSONString(responseVo));
+        currentContext.setResponseBody(JSON.toJSONString(failure));
         currentContext.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
         currentContext.getResponse().setContentType("application/json;charset=UTF-8");
        // ReflectionUtils.rethrowRuntimeException(new ZuulException("无访问权限", HttpStatus.FORBIDDEN.value(), "token校验不通过"));

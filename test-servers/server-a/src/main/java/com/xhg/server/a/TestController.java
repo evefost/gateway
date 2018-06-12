@@ -37,15 +37,16 @@ public class TestController {
 
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
-    public String getUser(String name) {
+    public UserBean getUser(String name) {
         UserBean userBean =  new UserBean();
         userBean.setName(name);
-        AuthRequest authRequest = new AuthRequest("server-a","123456","1233333");
-        AuthoInfo authorize = authorizeService.authorize(authRequest);
-        if(authorize.getCode()==1){
-            return "v0"+port+ "网关认证成功token:"+authorize.getToken();
-        }
-        return "网关认证的失败:"+authorize.getMessage();
+//        AuthRequest authRequest = new AuthRequest("server-a","123456","1233333");
+//        AuthoInfo authorize = authorizeService.authorize(authRequest);
+//        if(authorize.getCode()==1){
+//            return "v0"+port+ "网关认证成功token:"+authorize.getToken();
+//        }
+//        return "网关认证的失败:"+authorize.getMessage();
+        return userBean;
     }
 
 }

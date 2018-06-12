@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(scanBasePackages = {"com.xhg.server"})
 @EnableEurekaClient
 @ComponentScan
-@EnableFeignClients(basePackages = {"com.xhg.gateway.api.authorize"})
+@EnableFeignClients(basePackages = {"com.xie.gateway.api.authorize"})
 public class ServerA {
 	final static Logger logger = LoggerFactory.getLogger(ServerA.class);
 

@@ -51,7 +51,7 @@ public class ServiceValidFilter extends ZuulFilter implements ApplicationListene
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        return serviceIsDisable(ctx);
+        return false;//serviceIsDisable(ctx);
     }
 
     public boolean serviceIsDisable(RequestContext context) {

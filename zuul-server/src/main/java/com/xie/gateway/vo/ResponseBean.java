@@ -17,6 +17,9 @@ public class ResponseBean<T> implements Serializable, Cloneable {
 
     private String message = "成功";
 
+    public int getCode() {
+        return code;
+    }
 
     public String getMessage() {
         return message;

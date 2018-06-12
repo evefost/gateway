@@ -10,7 +10,7 @@ spring:
   datasource:
     username: ${dataBaseUsername:root}
     password: ${dataBasePassword:root}
-    url: ${dataBaseUrl:jdbc:mysql://10.10.10.119:3306/gateway-db?characterEncoding=utf8}
+    url: ${dataBaseUrl:jdbc:mysql://localhost:3306/gateway-db?characterEncoding=utf8}
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     cluster:
@@ -19,7 +19,7 @@ spring:
 mybatis-plus:
  mapper-locations: classpath:/mapper/*Mapper.xml
  #实体扫描，多个package用逗号或者分号分隔
- typeAliasesPackage: com.xhg.*.entity
+ typeAliasesPackage: com.xie.*.entity
 
 ####################这里开始进入ZUUL配置###################################
 zuul:

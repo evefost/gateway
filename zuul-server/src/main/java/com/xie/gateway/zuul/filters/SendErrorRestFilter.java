@@ -1,14 +1,12 @@
 package com.xie.gateway.zuul.filters;
 
 import com.alibaba.fastjson.JSON;
-import com.xie.gateway.vo.ResponseVo;
-import com.xie.gateway.vo.RsBody;
+import com.netflix.zuul.context.RequestContext;
+import com.xie.gateway.vo.ResponseBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.post.SendErrorFilter;
 import org.springframework.stereotype.Component;
-
-import com.netflix.zuul.context.RequestContext;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.ERROR_TYPE;
 
@@ -30,15 +28,10 @@ public class SendErrorRestFilter extends SendErrorFilter {
 		// 获取response状态码
 		int status = context.getResponseStatusCode();
 		// 转成json格式输出
-		ResponseVo responseVo = new ResponseVo();
-		responseVo.setCode(1);
-		RsBody rb = new RsBody();
-		rb.setCode(status);
-		rb.setMessage(throwable.getMessage());
-		responseVo.setResponseBody(rb);
+		ResponseBean<Object> failure = ResponseBean.failure(status, throwable.getMessage());
 		// 记录日志
 		logger.warn("zuul后台有个异常", context.getThrowable());
-		context.setResponseBody(JSON.toJSONString(responseVo));
+		context.setResponseBody(JSON.toJSONString(failure));
 		context.getResponse().setContentType("application/json;charset=UTF-8");
 		// 处理了异常以后，就清空
 		context.remove("throwable");

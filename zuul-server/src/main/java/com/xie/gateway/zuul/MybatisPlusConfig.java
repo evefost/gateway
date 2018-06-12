@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.xhg.gateway.mapper*")
+@MapperScan("com.xie.gateway.mapper*")
 public class MybatisPlusConfig {
    /*
     * 分页插件，自动识别数据库类型

@@ -1,13 +1,9 @@
 
 package com.xie.gateway.zuul;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.alibaba.fastjson.JSON;
 import com.netflix.zuul.context.RequestContext;
-import com.xie.gateway.vo.ResponseVo;
+import com.xie.gateway.vo.ResponseBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 // 写一个默认的hystrix降级策略
 @Component
@@ -42,12 +42,8 @@ public class DefaultFallbackProvider implements ZuulFallbackProvider{
 			public InputStream getBody() throws IOException {
 				RequestContext currentContext = RequestContext.getCurrentContext();
 				Throwable throwable = currentContext.getThrowable();
-
-				ResponseVo responseVo = new ResponseVo();
-				responseVo.setCode(-1);
-				responseVo.setMessage("网关调用服务出错");
-				//responseVo.setResponseBody(new RsBody());
-				String result = JSON.toJSONString(responseVo);
+				ResponseBean<Object> respone = ResponseBean.failure("网关调用服务出错");
+				String result = JSON.toJSONString(respone);
 				return new ByteArrayInputStream(result.getBytes());
 			}
 			
