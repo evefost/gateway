@@ -1,4 +1,4 @@
-package com.xie.gateway.aop;
+package com.xie.gateway.tracffic;
 
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 

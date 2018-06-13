@@ -1,9 +1,8 @@
-package com.xie.gateway.aop;
+package com.xie.gateway.tracffic;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
@@ -18,7 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Aspect
 @Configuration
-public class TracfficControll {
+public class TracfficAop {
+
+    @Resource()
+    private TracfficCommanFactoryWraper factoryWraper;
 
     @Resource
    private ZuulProperties defaultProperties;
@@ -35,9 +37,8 @@ public class TracfficControll {
     @Around("pointcutName()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         //处理线程池或信号量
-        RibbonCommandFactory factory = (RibbonCommandFactory) point.getTarget();
         RibbonCommandContext context = (RibbonCommandContext) point.getArgs()[0];
-        return factory.create(context);
+        return factoryWraper.create(context);
     }
 
 }
