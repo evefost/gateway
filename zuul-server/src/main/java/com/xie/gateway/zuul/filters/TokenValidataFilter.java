@@ -78,7 +78,8 @@ public class TokenValidataFilter extends ZuulFilter implements ApplicationListen
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         logger.info("sessionId========:{}",ctx.getRequest().getSession().getId());
-        return isNeedAuthentication(ctx);
+       // return isNeedAuthentication(ctx);
+        return false;
     }
 
     @Override
