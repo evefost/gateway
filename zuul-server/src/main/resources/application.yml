@@ -71,10 +71,7 @@ ribbon:
   MaxAutoRetriesNextServer: 3
   # 当前实例重试次数
   MaxAutoRetries: 0
-  okhttp:
-    enabled: false
-  httpclient:
-    enabled: true
+
 ########hystrix相关配置
 hystrix:
   command:

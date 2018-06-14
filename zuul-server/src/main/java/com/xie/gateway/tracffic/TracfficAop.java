@@ -1,12 +1,12 @@
 package com.xie.gateway.tracffic;
 
+import com.xie.gateway.tracffic.wraper.CommanFactoryWraper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
-import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
@@ -20,15 +20,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TracfficAop {
 
     @Resource()
-    private TracfficCommanFactoryWraper factoryWraper;
+    private CommanFactoryWraper factoryWraper;
 
-    @Resource
-   private ZuulProperties defaultProperties;
 
-    private ConcurrentHashMap<String,SingleServiceProperties> servicesProperties = new ConcurrentHashMap<>();
+
 
     @Pointcut("execution(* org.springframework.cloud.netflix.zuul.filters.route..RibbonCommandFactory.create(..))")
     public void pointcutName() {
+
     }
 
 
