@@ -1,11 +1,10 @@
 package com.xie.gateway.tracffic.wraper;
 
-import com.xie.gateway.tracffic.SingleServiceProperties;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
-import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
+import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
 import org.springframework.cloud.netflix.zuul.filters.route.apache.HttpClientRibbonCommand;
 
 import java.util.Collections;
@@ -18,7 +17,7 @@ public class HttpCleintCommanFacotoryWraper extends AbstractCommandFactoryWraper
 
     private final SpringClientFactory clientFactory;
 
-    private final ZuulProperties zuulProperties;
+    private final ZuulProperties defaultZuulProperties;
 
     public HttpCleintCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
         this(clientFactory, zuulProperties, Collections.<FallbackProvider>emptySet());
@@ -28,7 +27,7 @@ public class HttpCleintCommanFacotoryWraper extends AbstractCommandFactoryWraper
                                           Set<FallbackProvider> fallbackProviders) {
         super(fallbackProviders);
         this.clientFactory = clientFactory;
-        this.zuulProperties = zuulProperties;
+        this.defaultZuulProperties = zuulProperties;
     }
 
     @Override
@@ -38,10 +37,8 @@ public class HttpCleintCommanFacotoryWraper extends AbstractCommandFactoryWraper
         final RibbonLoadBalancingHttpClient client = this.clientFactory.getClient(
                 serviceId, RibbonLoadBalancingHttpClient.class);
         client.setLoadBalancer(this.clientFactory.getLoadBalancer(serviceId));
-        // todo 替换掉统一的zuulProperties
-        SingleServiceProperties singleServiceProperties = servicesProperties.get(serviceId);
-
-        return new HttpClientRibbonCommand(serviceId, client, context, zuulProperties, zuulFallbackProvider,
+        ZuulProperties zuulProperties = servicesProperties.get(serviceId);
+        return new HttpClientRibbonCommand(serviceId, client, context, zuulProperties==null?defaultZuulProperties:zuulProperties, zuulFallbackProvider,
                 clientFactory.getClientConfig(serviceId));
     }
 }

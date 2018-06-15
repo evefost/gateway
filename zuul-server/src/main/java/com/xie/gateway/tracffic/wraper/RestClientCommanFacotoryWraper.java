@@ -19,7 +19,7 @@ public class RestClientCommanFacotoryWraper extends AbstractCommandFactoryWraper
 
     private SpringClientFactory clientFactory;
 
-    private ZuulProperties zuulProperties;
+    private final ZuulProperties defaultZuulProperties;
 
     public RestClientCommanFacotoryWraper(SpringClientFactory clientFactory) {
         this(clientFactory, new ZuulProperties(), Collections.<FallbackProvider>emptySet());
@@ -30,7 +30,7 @@ public class RestClientCommanFacotoryWraper extends AbstractCommandFactoryWraper
                                           Set<FallbackProvider> zuulFallbackProviders) {
         super(zuulFallbackProviders);
         this.clientFactory = clientFactory;
-        this.zuulProperties = zuulProperties;
+        this.defaultZuulProperties = zuulProperties;
     }
 
     @Override
@@ -40,19 +40,13 @@ public class RestClientCommanFacotoryWraper extends AbstractCommandFactoryWraper
         FallbackProvider fallbackProvider = getFallbackProvider(serviceId);
         RestClient restClient = this.clientFactory.getClient(serviceId,
                 RestClient.class);
+        ZuulProperties zuulProperties = servicesProperties.get(serviceId);
         return new RestClientRibbonCommand(context.getServiceId(), restClient, context,
-                this.zuulProperties, fallbackProvider, clientFactory.getClientConfig(serviceId));
+                (zuulProperties==null)?defaultZuulProperties:zuulProperties, fallbackProvider, clientFactory.getClientConfig(serviceId));
     }
 
     public SpringClientFactory getClientFactory() {
         return clientFactory;
     }
-
-    public void setZuulProperties(ZuulProperties zuulProperties) {
-        this.zuulProperties = zuulProperties;
-    }
-
-
-
 
 }

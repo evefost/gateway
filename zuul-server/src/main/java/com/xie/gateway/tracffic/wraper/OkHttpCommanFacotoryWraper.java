@@ -18,7 +18,7 @@ public class OkHttpCommanFacotoryWraper extends AbstractCommandFactoryWraper  {
 
     private SpringClientFactory clientFactory;
 
-    private ZuulProperties zuulProperties;
+    private final ZuulProperties defaultZuulProperties;
 
     public OkHttpCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
         this(clientFactory, zuulProperties, Collections.<FallbackProvider>emptySet());
@@ -28,7 +28,7 @@ public class OkHttpCommanFacotoryWraper extends AbstractCommandFactoryWraper  {
                                       Set<FallbackProvider> zuulFallbackProviders) {
         super(zuulFallbackProviders);
         this.clientFactory = clientFactory;
-        this.zuulProperties = zuulProperties;
+        this.defaultZuulProperties = zuulProperties;
     }
 
     @Override
@@ -38,8 +38,8 @@ public class OkHttpCommanFacotoryWraper extends AbstractCommandFactoryWraper  {
         final OkHttpLoadBalancingClient client = this.clientFactory.getClient(
                 serviceId, OkHttpLoadBalancingClient.class);
         client.setLoadBalancer(this.clientFactory.getLoadBalancer(serviceId));
-
-        return new OkHttpRibbonCommand(serviceId, client, context, zuulProperties, fallbackProvider,
+        ZuulProperties zuulProperties = servicesProperties.get(serviceId);
+        return new OkHttpRibbonCommand(serviceId, client, context, (zuulProperties==null)?defaultZuulProperties:zuulProperties, fallbackProvider,
                 clientFactory.getClientConfig(serviceId));
     }
 

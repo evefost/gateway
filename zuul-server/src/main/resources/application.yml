@@ -83,7 +83,7 @@ hystrix:
         isolation:
           thread:
             # 命令执行超时时间 20秒
-            timeoutInMilliseconds: 20000
+            timeoutInMilliseconds: 40000
 gateway:
   zuul:
     # 是否开启默认fallback

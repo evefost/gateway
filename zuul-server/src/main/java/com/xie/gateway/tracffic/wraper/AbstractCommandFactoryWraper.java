@@ -1,11 +1,8 @@
 package com.xie.gateway.tracffic.wraper;
 
-import com.xie.gateway.tracffic.SingleServiceProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
-import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,8 +13,7 @@ public abstract class AbstractCommandFactoryWraper implements CommanFactoryWrape
 	private Map<String, FallbackProvider> fallbackProviderCache;
     private FallbackProvider defaultFallbackProvider = null;
 
-	protected  static ConcurrentHashMap<String,SingleServiceProperties> servicesProperties = new ConcurrentHashMap<>();
-
+	protected  static ConcurrentHashMap<String,ZuulProperties> servicesProperties = new ConcurrentHashMap<>();
 
 	public AbstractCommandFactoryWraper(Set<FallbackProvider> fallbackProviders){
 		this.fallbackProviderCache = new HashMap<>();
