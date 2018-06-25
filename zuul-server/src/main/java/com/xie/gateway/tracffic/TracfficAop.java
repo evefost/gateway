@@ -5,32 +5,30 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 动态管理服务测试
+ * 动态管理服务
  */
 @Aspect
 @Configuration
 public class TracfficAop {
 
+    @Autowired
+    private ZuulProperties zuulProperties;
+
     @Resource()
     private CommanFactoryWraper factoryWraper;
-
-
-
 
     @Pointcut("execution(* org.springframework.cloud.netflix.zuul.filters.route..RibbonCommandFactory.create(..))")
     public void pointcutName() {
 
     }
-
-
 
 
     @Around("pointcutName()")

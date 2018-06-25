@@ -17,20 +17,8 @@ import java.util.Set;
 public class RestClientCommanFacotoryWraper extends AbstractCommandFactoryWraper {
 
 
-    private SpringClientFactory clientFactory;
-
-    private final ZuulProperties defaultZuulProperties;
-
-    public RestClientCommanFacotoryWraper(SpringClientFactory clientFactory) {
-        this(clientFactory, new ZuulProperties(), Collections.<FallbackProvider>emptySet());
-    }
-
-    public RestClientCommanFacotoryWraper(SpringClientFactory clientFactory,
-                                          ZuulProperties zuulProperties,
-                                          Set<FallbackProvider> zuulFallbackProviders) {
-        super(zuulFallbackProviders);
-        this.clientFactory = clientFactory;
-        this.defaultZuulProperties = zuulProperties;
+    public RestClientCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<FallbackProvider> zuulFallbackProviders) {
+        super(clientFactory, zuulProperties, zuulFallbackProviders);
     }
 
     @Override

@@ -16,19 +16,9 @@ import java.util.Set;
  */
 public class OkHttpCommanFacotoryWraper extends AbstractCommandFactoryWraper  {
 
-    private SpringClientFactory clientFactory;
 
-    private final ZuulProperties defaultZuulProperties;
-
-    public OkHttpCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
-        this(clientFactory, zuulProperties, Collections.<FallbackProvider>emptySet());
-    }
-
-    public OkHttpCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties,
-                                      Set<FallbackProvider> zuulFallbackProviders) {
-        super(zuulFallbackProviders);
-        this.clientFactory = clientFactory;
-        this.defaultZuulProperties = zuulProperties;
+    public OkHttpCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<FallbackProvider> zuulFallbackProviders) {
+        super(clientFactory, zuulProperties, zuulFallbackProviders);
     }
 
     @Override

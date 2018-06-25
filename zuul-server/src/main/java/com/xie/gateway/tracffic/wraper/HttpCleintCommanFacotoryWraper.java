@@ -7,7 +7,6 @@ import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
 import org.springframework.cloud.netflix.zuul.filters.route.apache.HttpClientRibbonCommand;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -15,19 +14,9 @@ import java.util.Set;
  */
 public class HttpCleintCommanFacotoryWraper extends AbstractCommandFactoryWraper {
 
-    private final SpringClientFactory clientFactory;
 
-    private final ZuulProperties defaultZuulProperties;
-
-    public HttpCleintCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
-        this(clientFactory, zuulProperties, Collections.<FallbackProvider>emptySet());
-    }
-
-    public HttpCleintCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties,
-                                          Set<FallbackProvider> fallbackProviders) {
-        super(fallbackProviders);
-        this.clientFactory = clientFactory;
-        this.defaultZuulProperties = zuulProperties;
+    public HttpCleintCommanFacotoryWraper(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<FallbackProvider> zuulFallbackProviders) {
+        super(clientFactory, zuulProperties, zuulFallbackProviders);
     }
 
     @Override
