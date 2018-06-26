@@ -58,9 +58,9 @@ zuul:
       path: /system/manager/*
       # 这里表示，这个路由的实例信息，是通过ribbon负载均衡器进行获取的。值就是对应服务名
       serviceId: system-manager
-    server-a:
-      path: /test/**
-      url: https://blog.csdn.net/
+#    server-a:
+#      path: /test/**
+#      url: https://blog.csdn.net/
 ribbon:
   # 配置ribbon默认的超时时间
   ConnectTimeout: 5000

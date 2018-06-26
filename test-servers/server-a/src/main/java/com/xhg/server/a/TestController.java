@@ -4,6 +4,7 @@ import com.xie.gateway.api.authorize.AuthRequest;
 import com.xie.gateway.api.authorize.AuthoInfo;
 import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xhg.test.common.UserBean;
+import com.xie.gateway.api.authorize.AuthorizeService2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,9 @@ public class TestController {
 
     @Resource
     private AuthorizeService authorizeService;
+
+    @Resource
+    private AuthorizeService2 authorizeService2;
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
     public String queryInfo() {
