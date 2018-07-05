@@ -87,29 +87,37 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- Docker maven plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
+                    <!-- 私有仓库配置，需要settings.xml文件配合serverId对应的服务地址,与maven仓库一样 -->
+                    <serverId>${docker.repostory}</serverId>
+                    <!--仓库服务器址-->
+                    <registryUrl>${docker.registry}</registryUrl>
+                    <!--指定镜像名称-->
+                    <imageName>${docker.registry}/${docker.repostory}/${project.artifactId}</imageName>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                    </imageTags>
+                    <!--远程docker地址利用它是构建镜象，2375非加密端口，2376为加密端口要加证书-->
+                    <dockerHost>${docker.host}</dockerHost>
+                    <!--<dockerCertPath></dockerCertPath>-->
+
+                    <!--指定dockerfile所在目录-->
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>Snapshots</name>
-            <url>http://10.10.10.241:8088/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>releases</id>
-            <name>Releases</name>
-            <url>http://10.10.10.241:8088/nexus/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
 
 </project>

@@ -18,7 +18,15 @@
         <module>gateway-core-api</module>
         <module>zuul-server</module>
         <module>test-servers</module>
+        <module>eureka-server</module>
     </modules>
+
+    <properties>
+        <docker.host>http://192.168.28.129:2375</docker.host>
+        <docker.registry>192.168.28.129:8083</docker.registry>
+        <docker.repostory>nexus-docker</docker.repostory>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -42,18 +50,35 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <!-- Docker maven plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <!-- 私有仓库配置，需要settings.xml文件配合serverId对应的服务地址,与maven仓库一样 -->
+                    <serverId>${docker.repostory}</serverId>
+                    <!--仓库服务器址-->
+                    <registryUrl>${docker.registry}</registryUrl>
+                    <!--指定镜像名称-->
+                    <imageName>${docker.registry}/${docker.repostory}/${project.artifactId}</imageName>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                    </imageTags>
+                    <!--远程docker地址利用它是构建镜象，2375非加密端口，2376为加密端口要加证书-->
+                    <dockerHost>${docker.host}</dockerHost>
+                    <!--<dockerCertPath></dockerCertPath>-->
+
+                    <!--指定dockerfile所在目录-->
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
             </plugin>
         </plugins>
 

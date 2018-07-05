@@ -10,7 +10,7 @@ spring:
   datasource:
     username: ${dataBaseUsername:root}
     password: ${dataBasePassword:root}
-    url: ${dataBaseUrl:jdbc:mysql://localhost:3306/gateway-db?characterEncoding=utf8}
+    url: ${dataBaseUrl:jdbc:mysql://10.10.10.143:3306/gateway-db?characterEncoding=utf8}
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     cluster:
