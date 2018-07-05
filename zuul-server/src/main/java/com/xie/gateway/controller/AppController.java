@@ -9,14 +9,15 @@ import com.xie.gateway.api.event.UriChangeEvent;
 import com.xie.gateway.bo.AppBo;
 import com.xie.gateway.entity.GatewayApp;
 import com.xie.gateway.query.AppQy;
+import com.xie.gateway.remote.SitePriceFeignService;
 import com.xie.gateway.service.GatewayAppService;
 import com.xie.gateway.vo.AppVo;
 import com.xie.gateway.vo.PagerResult;
 import com.xie.gateway.vo.ResponseBean;
+import com.xie.gateway.xx.remote.TestFeign;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,8 +45,22 @@ public class AppController extends BaseController implements ApplicationContextA
     @Resource
     GatewayAppService appService;
 
+
     @Resource
-    RibbonCommandFactory  factory;
+    private SitePriceFeignService feignService;
+
+    @Resource
+    private TestFeign feignService2;
+
+    @RequestMapping(value = "test", method = RequestMethod.POST)
+    public ResponseBean test() {
+        return ResponseBean.success(feignService.queryInfo(new AppBo()));
+    }
+
+    @RequestMapping(value = "test2", method = RequestMethod.POST)
+    public ResponseBean test2() {
+        return ResponseBean.success(feignService2.queryInfo(new AppBo()));
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

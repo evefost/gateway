@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.filters.discovery.PatternServiceRouteMapper;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -29,6 +30,7 @@ import java.util.Set;
 @EnableCircuitBreaker
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+@EnableFeignClients
 public class ZuulApplication {
 	final static Logger logger = LoggerFactory.getLogger(ZuulApplication.class);
 	//static JedisConnection sss = new JedisConnection(null);
