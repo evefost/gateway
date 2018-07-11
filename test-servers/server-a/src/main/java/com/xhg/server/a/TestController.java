@@ -1,10 +1,11 @@
 package com.xhg.server.a;
 
-import com.xie.gateway.api.authorize.AuthRequest;
-import com.xie.gateway.api.authorize.AuthoInfo;
+
+import com.xie.gateway.api.ClientProperties;
 import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xhg.test.common.UserBean;
 import com.xie.gateway.api.authorize.AuthorizeService2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +40,9 @@ public class TestController {
         return new UserBean();
     }
 
+
+    @Autowired
+    private ClientProperties clientProperties;
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
     public UserBean getUser(String name) {

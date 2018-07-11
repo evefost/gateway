@@ -1,0 +1,32 @@
+{
+  "hints": [
+    {
+      "name": "authorize.client.id",
+      "value":""
+    },
+    {
+      "name": "authorize.client.secret",
+      "value":""
+    }
+  ],
+  "groups": [
+    {
+
+      "name": "授权客户端",
+      "type": "com.xie.gateway.api.ClientProperties",
+      "sourceType": "com.xie.gateway.api.ClientProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.xie.gateway.api.ClientProperties",
+      "name": "authorize.client.id",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.xie.gateway.api.ClientProperties",
+      "name": "authorize.client.secret",
+      "type": "java.lang.String"
+    }
+  ]
+}
