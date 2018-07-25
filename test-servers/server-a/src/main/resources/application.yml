@@ -3,7 +3,7 @@ info:
   contact: 服务A
 server:
   port: 9001
-
+  context-path: /aaa
 spring:
   application:
     name: server-a

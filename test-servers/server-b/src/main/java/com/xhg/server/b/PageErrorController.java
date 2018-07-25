@@ -30,7 +30,7 @@ public class PageErrorController extends BasicErrorController {
         Map body = this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = this.getStatus(request);
 
-        return new ResponseEntity("找不到页面servera-v1", status);
+        return new ResponseEntity("找不到页面servera-vb", status);
     }
 
     @Override

@@ -4,6 +4,7 @@ info:
 
 server:
   port: 9002
+  context-path: /bbb
 
 spring:
   application:

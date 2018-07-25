@@ -1,12 +1,16 @@
 package com.xhg.server.a;
 
 
+import com.netflix.appinfo.ApplicationInfoManager;
 import com.xie.gateway.api.ClientProperties;
 import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xhg.test.common.UserBean;
 import com.xie.gateway.api.authorize.AuthorizeService2;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.eureka.EurekaInstanceConfigBean;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +23,12 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/test")
-public class TestController {
+public class TestController  implements InitializingBean {
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private EurekaInstanceConfigBean eurekaInstanceConfigBean;
 
     @Value("${server.port}")
     private String port;
@@ -44,7 +53,7 @@ public class TestController {
     @Autowired
     private ClientProperties clientProperties;
 
-    @RequestMapping(value = "login",method = RequestMethod.POST)
+    @RequestMapping(value = "login",method = RequestMethod.GET)
     public UserBean getUser(String name) {
         UserBean userBean =  new UserBean();
         userBean.setName(name);
@@ -57,4 +66,10 @@ public class TestController {
         return userBean;
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        String serverContextPath = environment.getProperty("server.context-path", "/");
+        eurekaInstanceConfigBean.getMetadataMap().put("serverContextPath",serverContextPath);
+
+    }
 }
