@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/a/test")
 public class TestController  implements InitializingBean {
     @Autowired
     private Environment environment;

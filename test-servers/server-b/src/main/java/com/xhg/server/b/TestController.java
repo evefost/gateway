@@ -28,8 +28,6 @@ public class TestController  implements InitializingBean{
     @Autowired
     private InvokServiceA serviceA;
 
-    @Autowired
-    private ApplicationInfoManager applicationInfoManager;
     
     @Autowired
     private DiscoveryClient discoveryClient;

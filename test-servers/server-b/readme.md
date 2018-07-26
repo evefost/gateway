@@ -15,3 +15,20 @@ com.netflix.discovery.DiscoveryClient
 		
 		
 		AbstractJerseyEurekaHttpClient.regiest
+		
+		
+		
+		LoadBalancerContext
+		
+		FeignLoadBalancer extend LoadBalancerContext
+		
+			@Override
+        	public URI reconstructURIWithServer(Server server, URI original) {
+        		URI uri = updateToHttpsIfNeeded(original, this.clientConfig, this.serverIntrospector, server);
+        		return super.reconstructURIWithServer(server, uri);
+        	}
+        		public RibbonResponse execute(RibbonRequest request, IClientConfig configOverride){
+        		    //
+        		    Response response = request.client().execute(request.toRequest(), options);
+                	return new RibbonResponse(request.getUri(), response);
+        		}

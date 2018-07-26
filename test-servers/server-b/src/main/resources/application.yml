@@ -5,7 +5,7 @@ info:
 server:
   port: 9002
   context-path: /bbb
-
+#server-a-context-path: /aaa
 spring:
   application:
     name: server-b

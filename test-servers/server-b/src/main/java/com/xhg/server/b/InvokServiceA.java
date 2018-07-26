@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Created by xieyang on 18/7/25.
  */
 @FeignClient(name = "server-a")
+@RequestMapping(value = "${server-a-context-path:/}/a")
 public interface InvokServiceA {
 
-    @RequestMapping(value = "/aaa/test/login",method = RequestMethod.GET)
+    @RequestMapping(value = "/test/login",method = RequestMethod.GET)
     UserBean getUser(@RequestParam("name") String name);
 }
