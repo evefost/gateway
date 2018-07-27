@@ -27,6 +27,7 @@ public class PageErrorController extends BasicErrorController {
     @RequestMapping
     @ResponseBody
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+
         Map body = this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = this.getStatus(request);
 

@@ -13,15 +13,20 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Created by xieyang on 18/7/25.
  */
-@FeignClient(name = "server-a")
+@FeignClient(name = "server-abbbbb",configuration = {UploadServiceA.MultipartSupportConfig.class})
 @RequestMapping(value = "${server-a-context-path:/}/a")
-public interface InvokServiceA {
+public interface UploadServiceA {
+    @PostMapping(value = "/test/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    String handleFileUpload(@RequestPart(value = "file") MultipartFile file);
 
-    @RequestMapping(value = "/test/login",method = RequestMethod.GET)
-    UserBean getUser(@RequestParam("name") String name);
 
-    @RequestMapping(value = "/test/login2",method = RequestMethod.POST)
-    UserBean getUser2(@RequestBody UserBean name);
 
+    @Configuration
+    class MultipartSupportConfig {
+        @Bean()
+        public Encoder feignFormEncoder() {
+            return new SpringFormEncoder();
+        }
+    }
 
 }

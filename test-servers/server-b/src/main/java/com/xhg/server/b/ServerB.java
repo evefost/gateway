@@ -1,5 +1,6 @@
 package com.xhg.server.b;
 
+import com.xhg.server.b.anno.MyFeignClientsConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication(scanBasePackages = {"com.xhg.server"})
 @EnableEurekaClient
-@EnableFeignClients
+@EnableFeignClients(defaultConfiguration = {MyFeignClientsConfiguration.class})
 @EnableAspectJAutoProxy
 public class ServerB {
 	final static Logger logger = LoggerFactory.getLogger(ServerB.class);
