@@ -79,7 +79,7 @@ public class TestController  implements InitializingBean{
     @RequestMapping(value = "upload",method = RequestMethod.GET)
     public String getUser() {
 
-        File file = new File("C:\\Users\\xie\\Desktop\\111.java");
+        File file = new File("/Users/xieyang/Downloads/陈志辉简历.docx");
         DiskFileItem fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file",
                 MediaType.TEXT_PLAIN_VALUE, true, file.getName());
 

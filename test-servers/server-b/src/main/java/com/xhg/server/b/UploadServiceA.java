@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Created by xieyang on 18/7/25.
  */
-@FeignClient(name = "server-abbbbb",configuration = {UploadServiceA.MultipartSupportConfig.class})
+@FeignClient(name = "server-a")
 @RequestMapping(value = "${server-a-context-path:/}/a")
 public interface UploadServiceA {
     @PostMapping(value = "/test/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -21,12 +21,12 @@ public interface UploadServiceA {
 
 
 
-    @Configuration
-    class MultipartSupportConfig {
-        @Bean()
-        public Encoder feignFormEncoder() {
-            return new SpringFormEncoder();
-        }
-    }
+//    @Configuration
+//    class MultipartSupportConfig {
+//        @Bean()
+//        public Encoder feignFormEncoder() {
+//            return new SpringFormEncoder();
+//        }
+//    }
 
 }

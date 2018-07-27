@@ -97,7 +97,7 @@ public class TestController  implements InitializingBean {
     public String handleFileUpload(@RequestPart(value = "file") MultipartFile file) throws IOException {
         i++;
         String originalFilename = file.getOriginalFilename();
-        File newFile = new File("C:\\Users\\xie\\Desktop\\111222.java"+i);
+        File newFile = new File("/Users/xieyang/Downloads/陈志辉简历.docx"+i);
         InputStream inputStream = file.getInputStream();
         OutputStream ous = new FileOutputStream(newFile);
         IOUtils.copy(inputStream,ous);
