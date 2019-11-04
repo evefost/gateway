@@ -120,7 +120,7 @@ public class HttpServletRequestWrapper implements HttpServletRequest {
 
     @Override
     public String getServletPath() {
-        return "/"+serviceId+request.getServletPath();
+        return /*"/"+serviceId+*/request.getServletPath();
     }
 
     @Override

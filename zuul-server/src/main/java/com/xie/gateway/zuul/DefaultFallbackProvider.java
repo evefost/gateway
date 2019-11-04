@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
-import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.AbstractClientHttpResponse;
@@ -67,28 +66,28 @@ public class DefaultFallbackProvider implements FallbackProvider {
         public InputStream getBody() throws IOException {
             RequestContext currentContext = RequestContext.getCurrentContext();
             String serviceId = (String) currentContext.get(SERVICE_ID_KEY);
-            logger.warn("invoke {} 出错了", serviceId);
             ResponseBean<Object> respone = null;
-            if (cause == null) {
-                respone = ResponseBean.failure("网关调用服务出错");
+            Throwable rootCause = findCause(this.cause);
+            logger.error("调用异常信息 [{}]",serviceId, rootCause);
+            if (rootCause instanceof SocketTimeoutException) {
+                respone = ResponseBean.failure("请求服务超时");
+            } else if (rootCause instanceof HttpHostConnectException) {
+                respone = ResponseBean.failure("连接服务失败");
             } else {
-                logger.warn("调用异常信息 {}", cause);
-                Throwable second = cause.getCause();
-                if (second != null) {
-                    Throwable innerCause = second.getCause();
-                    if (innerCause instanceof SocketTimeoutException) {
-                        respone = ResponseBean.failure("请求服务超时");
-                    } else if (innerCause instanceof HttpHostConnectException) {
-                        respone = ResponseBean.failure("连接服务失败");
-                    } else {
-                        respone = ResponseBean.failure("网关调用服务出错");
-                    }
-                } else {
-                    respone = ResponseBean.failure("网关调用服务出错");
-                }
+                respone = ResponseBean.failure("网关调用服务出错");
             }
+
+
             String result = JSON.toJSONString(respone);
             return new ByteArrayInputStream(result.getBytes());
+        }
+
+        private Throwable findCause(Throwable root) {
+            Throwable cause = root.getCause();
+            if (cause == null) {
+                return root;
+            }
+            return findCause(cause);
         }
 
         @Override

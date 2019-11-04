@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  *
  * @author xie
  */
-@Component
+//@Component
 public class RewritePathFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(RewritePathFilter.class);

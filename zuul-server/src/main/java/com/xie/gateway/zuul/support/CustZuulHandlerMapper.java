@@ -1,5 +1,7 @@
 package com.xie.gateway.zuul.support;
 
+import com.netflix.zuul.context.RequestContext;
+import com.xie.gateway.exception.XhgException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,8 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SERVICE_ID_KEY;
 
 
 /**
@@ -74,11 +78,13 @@ public class CustZuulHandlerMapper extends ZuulHandlerMapping {
         }
 
         Object handler = super.lookupHandler(urlPath, request);
+
         if (handler == null) {
-            String serverId = parseServiceId(urlPath);
-            String detailMessage = "网关没匹配到对应的服务["+serverId+"],服务可能没有启动的实例,注册中心:"+eurekaUrls;
+            RequestContext currentContext = RequestContext.getCurrentContext();
+            String serviceId = (String) currentContext.get(SERVICE_ID_KEY);
+            String detailMessage = "网关没匹配到对应的服务["+serviceId+"],服务可能没有启动的实例,注册中心:"+eurekaUrls;
             log.warn(detailMessage);
-            throw new RuntimeException("网关没匹配到对应的服务");
+            throw new XhgException("网关没匹配到对应的服务");
         }
         return handler;
     }
