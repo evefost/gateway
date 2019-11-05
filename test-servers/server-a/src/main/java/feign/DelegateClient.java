@@ -3,10 +3,10 @@ package feign;
 import java.io.IOException;
 
 /**
- * 类说明
+ * proxy client
  * <p>
  *
- * @author 谢洋
+ * @author xieyang
  * @version 1.0.0
  * @date 2019/11/5
  */
@@ -28,15 +28,16 @@ public class DelegateClient implements Client {
         if (balance) {
             return balanceClient.execute(request, options);
         }
-        Request newRequest = newRequest(request);
+        Request newRequest = directRequest(request);
         return defaultClient.execute(newRequest, options);
     }
 
-    private Request newRequest(Request srcRequest) {
+    private Request directRequest(Request srcRequest) {
         String url = srcRequest.url().replaceAll(balanceUrl, directUrl);
         Request newRequest = new Request(srcRequest.method(), url, srcRequest.headers(), srcRequest.body(), srcRequest.charset());
         return newRequest;
     }
+
 
 
     public Client getBalanceClient() {

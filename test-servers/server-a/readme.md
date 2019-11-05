@@ -16,3 +16,11 @@ SynchronousMethodHandler
 
 
 FeignInvocationHandler->SynchronousMethodHandler
+
+
+SpringApplication.run
+refreshContext
+
+ApplicationContextInitializer
+
+刷新配置处理

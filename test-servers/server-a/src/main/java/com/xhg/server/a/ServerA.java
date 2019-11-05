@@ -23,7 +23,7 @@ public class ServerA {
 	final static Logger logger = LoggerFactory.getLogger(ServerA.class);
 
 	public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
-		replaceConfiguration();
+//		replaceConfiguration();
 		ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(ServerA.class).web(true)
 				.run(args);
 		logger.debug(applicationContext.getId() + "已经启动,当前host：{}",

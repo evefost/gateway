@@ -6,6 +6,8 @@ import feign.codec.Encoder;
 import feign.codec.ErrorDecoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.cloud.netflix.feign.ribbon.LoadBalancerFeignClient;
 import org.springframework.context.ApplicationContext;
@@ -16,18 +18,16 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 类说明
+ * by overwrite {@link FactoryBean#getObject()} change proxy object
+ *
  * <p>
  *
- * @author 谢洋
+ * @author xieyang
  * @version 1.0.0
  * @date 2019/11/5
  */
 public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
 
-    /***********************************
-     * WARNING! Nothing in this class should be @Autowired. It causes NPEs because of some lifecycle race condition.
-     ***********************************/
 
     private Class<?> type;
 
@@ -197,9 +197,10 @@ public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
     }
 
 
+    private DelegateClient delegateClient;
     @Override
     public Object getObject() throws Exception {
-        DelegateClient delegateClient = buildDelegateClient();
+        delegateClient = buildDelegateClient();
         FeignContext context = applicationContext.getBean(FeignContext.class);
         Feign.Builder builder = feign(context);
         String url;
@@ -218,7 +219,9 @@ public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
     }
 
     private DelegateClient buildDelegateClient() {
-        DelegateClient delegateClient = new DelegateClient();
+        if(delegateClient == null){
+            delegateClient = new DelegateClient();
+        }
         boolean balance = !StringUtils.hasText(this.url);
         delegateClient.setBalance(balance);
         String balanceUrl;
@@ -237,6 +240,17 @@ public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
         }
         delegateClient.setDirectUrl(directUrl);
         return delegateClient;
+    }
+
+
+    public void refreshConfig(String url){
+        if(StringUtils.isEmpty(url)){
+            this.url = null;
+        }else {
+            this.url = url;
+        }
+
+        buildDelegateClient();
     }
 
     private String cleanPath() {

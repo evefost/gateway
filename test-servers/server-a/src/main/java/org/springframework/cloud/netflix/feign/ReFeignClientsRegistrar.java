@@ -1,6 +1,5 @@
 package org.springframework.cloud.netflix.feign;
 
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -8,10 +7,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
@@ -27,30 +23,26 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
 /**
- * 类说明
+ * ReFeignClientsRegistrar instead  of {@link FeignClientsRegistrar}
+ *
+ * use RefFeignClientFactoryBean instead of FeignClientFactoryBean
+ *
+ *  to  change the http client delegate and client delegate able to  aware the config change
  * <p>
  *
- * @author 谢洋
+ * @author xieyang
  * @version 1.0.0
  * @date 2019/11/5
  */
-public class ReFeignClientsRegistrar implements ImportBeanDefinitionRegistrar,
-        ResourceLoaderAware, BeanClassLoaderAware, EnvironmentAware {
+public class ReFeignClientsRegistrar  extends FeignClientsRegistrar  {
 
-    // patterned after Spring Integration IntegrationComponentScanRegistrar
-    // and RibbonClientsConfigurationRegistgrar
 
     private ResourceLoader resourceLoader;
-
-    private ClassLoader classLoader;
 
     private Environment environment;
 
@@ -59,38 +51,25 @@ public class ReFeignClientsRegistrar implements ImportBeanDefinitionRegistrar,
 
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
+        super.setResourceLoader(resourceLoader);
         this.resourceLoader = resourceLoader;
     }
 
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+        super.setBeanClassLoader(classLoader);
     }
 
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata metadata,
-                                        BeanDefinitionRegistry registry) {
-        registerDefaultConfiguration(metadata, registry);
-        registerFeignClients(metadata, registry);
+    public void setEnvironment(Environment environment) {
+        super.setEnvironment(environment);
+        this.environment = environment;
+
     }
 
-    private void registerDefaultConfiguration(AnnotationMetadata metadata,
-                                              BeanDefinitionRegistry registry) {
-        Map<String, Object> defaultAttrs = metadata
-                .getAnnotationAttributes(EnableFeignClients.class.getName(), true);
 
-        if (defaultAttrs != null && defaultAttrs.containsKey("defaultConfiguration")) {
-            String name;
-            if (metadata.hasEnclosingClass()) {
-                name = "default." + metadata.getEnclosingClassName();
-            } else {
-                name = "default." + metadata.getClassName();
-            }
-            registerClientConfiguration(registry, name,
-                    defaultAttrs.get("defaultConfiguration"));
-        }
-    }
 
+    @Override
     public void registerFeignClients(AnnotationMetadata metadata,
                                      BeanDefinitionRegistry registry) {
         ClassPathScanningCandidateComponentProvider scanner = getScanner();
@@ -189,34 +168,6 @@ public class ReFeignClientsRegistrar implements ImportBeanDefinitionRegistrar,
         annotation.getAliasedString("name", FeignClient.class, null);
     }
 
-    /* for testing */ String getName(Map<String, Object> attributes) {
-        String name = (String) attributes.get("serviceId");
-        if (!StringUtils.hasText(name)) {
-            name = (String) attributes.get("name");
-        }
-        if (!StringUtils.hasText(name)) {
-            name = (String) attributes.get("value");
-        }
-        name = resolve(name);
-        if (!StringUtils.hasText(name)) {
-            return "";
-        }
-
-        String host = null;
-        try {
-            String url;
-            if (!name.startsWith("http://") && !name.startsWith("https://")) {
-                url = "http://" + name;
-            } else {
-                url = name;
-            }
-            host = new URI(url).getHost();
-
-        } catch (URISyntaxException e) {
-        }
-        Assert.state(host != null, "Service id not legal hostname (" + name + ")");
-        return name;
-    }
 
     private String resolve(String value) {
         if (StringUtils.hasText(value)) {
@@ -254,65 +205,9 @@ public class ReFeignClientsRegistrar implements ImportBeanDefinitionRegistrar,
         return path;
     }
 
-    protected ClassPathScanningCandidateComponentProvider getScanner() {
-        return new ClassPathScanningCandidateComponentProvider(false, this.environment) {
 
-            @Override
-            protected boolean isCandidateComponent(
-                    AnnotatedBeanDefinition beanDefinition) {
-                if (beanDefinition.getMetadata().isIndependent()) {
-                    // TODO until SPR-11711 will be resolved
-                    if (beanDefinition.getMetadata().isInterface()
-                            && beanDefinition.getMetadata()
-                            .getInterfaceNames().length == 1
-                            && Annotation.class.getName().equals(beanDefinition
-                            .getMetadata().getInterfaceNames()[0])) {
-                        try {
-                            Class<?> target = ClassUtils.forName(
-                                    beanDefinition.getMetadata().getClassName(),
-                                    ReFeignClientsRegistrar.this.classLoader);
-                            return !target.isAnnotation();
-                        } catch (Exception ex) {
-                            this.logger.error(
-                                    "Could not load target class: "
-                                            + beanDefinition.getMetadata().getClassName(),
-                                    ex);
 
-                        }
-                    }
-                    return true;
-                }
-                return false;
 
-            }
-        };
-    }
-
-    protected Set<String> getBasePackages(AnnotationMetadata importingClassMetadata) {
-        Map<String, Object> attributes = importingClassMetadata
-                .getAnnotationAttributes(EnableFeignClients.class.getCanonicalName());
-
-        Set<String> basePackages = new HashSet<>();
-        for (String pkg : (String[]) attributes.get("value")) {
-            if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
-            }
-        }
-        for (String pkg : (String[]) attributes.get("basePackages")) {
-            if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
-            }
-        }
-        for (Class<?> clazz : (Class[]) attributes.get("basePackageClasses")) {
-            basePackages.add(ClassUtils.getPackageName(clazz));
-        }
-
-        if (basePackages.isEmpty()) {
-            basePackages.add(
-                    ClassUtils.getPackageName(importingClassMetadata.getClassName()));
-        }
-        return basePackages;
-    }
 
     private String getQualifier(Map<String, Object> client) {
         if (client == null) {
@@ -355,10 +250,6 @@ public class ReFeignClientsRegistrar implements ImportBeanDefinitionRegistrar,
                 builder.getBeanDefinition());
     }
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
 
     /**
      * Helper class to create a {@link TypeFilter} that matches if all the delegates

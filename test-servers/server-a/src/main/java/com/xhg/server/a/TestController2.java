@@ -1,6 +1,7 @@
 package com.xhg.server.a;
 
 import com.xhg.test.common.UserBean;
+import feign.FeignClientConfigRefresh;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -46,6 +47,14 @@ public class TestController2 implements ApplicationContextAware {
     @RequestMapping(value = "getUser",method = RequestMethod.GET)
     public String getUser() {
         return serverC.addCompose();
+    }
+
+    @Autowired
+    private FeignClientConfigRefresh refresh;
+
+    @RequestMapping(value = "refresh",method = RequestMethod.GET)
+    public void refresh(String url) {
+         refresh.refresh(  url);
     }
 
 
