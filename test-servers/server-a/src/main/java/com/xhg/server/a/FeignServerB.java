@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @version 1.0.0
  * @date 2019/11/5
  */
-@FeignClient(name = "server-b", url = "http://localhost:9002")
+@FeignClient(name = "server-b", url = "${ms-url.server-b:}")
 public interface FeignServerB {
 
     @RequestMapping(value = "/test/queryInfo", method = RequestMethod.GET)

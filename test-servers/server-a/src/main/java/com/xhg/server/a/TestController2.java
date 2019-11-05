@@ -53,8 +53,8 @@ public class TestController2 implements ApplicationContextAware {
     private FeignClientConfigRefresh refresh;
 
     @RequestMapping(value = "refresh",method = RequestMethod.GET)
-    public void refresh(String url) {
-         refresh.refresh(  url);
+    public void refresh(String urlKey,String url) {
+         refresh.refresh(  urlKey,url);
     }
 
 

@@ -20,11 +20,11 @@ public class FeignClientConfigRefresh implements ApplicationContextAware{
     }
 
 
-    public void refresh(String url){
+    public void refresh(String urlKey,String url){
 
         Map<String, RefFeignClientFactoryBean> beansOfType = applicationContext.getBeansOfType(RefFeignClientFactoryBean.class);
         beansOfType.forEach((k,v)->{
-            v.refreshConfig(url);
+            v.refreshConfig(urlKey,url);
         });
 
     }

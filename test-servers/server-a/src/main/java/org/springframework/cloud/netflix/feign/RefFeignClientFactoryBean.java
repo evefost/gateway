@@ -45,6 +45,12 @@ public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
 
     private Class<?> fallbackFactory = void.class;
 
+    private String urlKey;
+
+    public void setUrlKey(String urlKey) {
+        this.urlKey = urlKey;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         Assert.hasText(this.name, "Name must be set");
@@ -243,7 +249,10 @@ public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
     }
 
 
-    public void refreshConfig(String url){
+    public void refreshConfig(String urlKey,String url){
+        if(urlKey ==null || !urlKey.equals(this.urlKey)){
+            return;
+        }
         if(StringUtils.isEmpty(url)){
             this.url = null;
         }else {
@@ -304,6 +313,10 @@ public class RefFeignClientFactoryBean extends FeignClientFactoryBean {
     @Override
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getUrlKey() {
+        return urlKey;
     }
 
     @Override

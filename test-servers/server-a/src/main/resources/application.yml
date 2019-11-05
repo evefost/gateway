@@ -7,3 +7,5 @@ server:
 spring:
   application:
     name: server-a
+ms-url:
+  server-b: http://localhost:9002

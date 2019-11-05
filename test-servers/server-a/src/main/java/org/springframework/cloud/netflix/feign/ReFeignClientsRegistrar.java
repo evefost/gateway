@@ -29,22 +29,26 @@ import java.util.*;
 
 /**
  * ReFeignClientsRegistrar instead  of {@link FeignClientsRegistrar}
- *
+ * <p>
  * use RefFeignClientFactoryBean instead of FeignClientFactoryBean
- *
- *  to  change the http client delegate and client delegate able to  aware the config change
+ * <p>
+ * to  change the http client delegate and client delegate able to  aware the config change
  * <p>
  *
  * @author xieyang
  * @version 1.0.0
  * @date 2019/11/5
  */
-public class ReFeignClientsRegistrar  extends FeignClientsRegistrar  {
+public class ReFeignClientsRegistrar extends FeignClientsRegistrar {
 
 
     private ResourceLoader resourceLoader;
 
     private Environment environment;
+
+    private final String placeholderPrefix = "{";
+
+    private final String placeholderSuffix = "}";
 
     public ReFeignClientsRegistrar() {
     }
@@ -66,7 +70,6 @@ public class ReFeignClientsRegistrar  extends FeignClientsRegistrar  {
         this.environment = environment;
 
     }
-
 
 
     @Override
@@ -135,6 +138,7 @@ public class ReFeignClientsRegistrar  extends FeignClientsRegistrar  {
         BeanDefinitionBuilder definition = BeanDefinitionBuilder
                 .genericBeanDefinition(RefFeignClientFactoryBean.class);
         validate(attributes);
+        definition.addPropertyValue("urlKey", getUrlKey(attributes));
         definition.addPropertyValue("url", getUrl(attributes));
         definition.addPropertyValue("path", getPath(attributes));
         String name = getName(attributes);
@@ -160,6 +164,17 @@ public class ReFeignClientsRegistrar  extends FeignClientsRegistrar  {
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className,
                 new String[]{alias});
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+    }
+
+
+    private String getUrlKey(Map<String, Object> attributes){
+        String  srcUrl = (String) attributes.get("url");
+        int s = srcUrl.indexOf(placeholderPrefix);
+        int e = srcUrl.indexOf(placeholderSuffix);
+        if(s>0 && e>0){
+           return srcUrl.substring(s+1,e-1);
+        }
+        return null;
     }
 
     private void validate(Map<String, Object> attributes) {
@@ -204,9 +219,6 @@ public class ReFeignClientsRegistrar  extends FeignClientsRegistrar  {
         }
         return path;
     }
-
-
-
 
 
     private String getQualifier(Map<String, Object> client) {
