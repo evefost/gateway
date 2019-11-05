@@ -1,0 +1,18 @@
+
+FeignClientFactoryBean 代理生成
+1.没配置url:走负载
+LoadBalancerFeignClient 
+2.配置url:不走负载，直接httpConnect
+Default
+
+动态修改url配置，据url配置选择走负载或走httpConnect
+改造
+
+FeignClientFactoryBean
+SynchronousMethodHandler
+改写SynchronousMethodHandler 的client 再代理一层
+在client 代理处理是选择负载或直接connect
+启动时改 创建loadbalanceClient 
+
+
+FeignInvocationHandler->SynchronousMethodHandler

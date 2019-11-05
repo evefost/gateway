@@ -1,10 +1,9 @@
 package com.xhg.server.a;
 
-import com.xie.gateway.api.authorize.AuthRequest;
-import com.xie.gateway.api.authorize.AuthoInfo;
-import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xhg.test.common.UserBean;
+import com.xie.gateway.api.authorize.AuthorizeService;
 import com.xie.gateway.api.authorize.AuthorizeService2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,9 +22,10 @@ public class TestController {
     @Value("${server.port}")
     private String port;
 
-    @Resource
+    @Autowired(required = false)
     private AuthorizeService authorizeService;
 
+    @Autowired(required = false)
     @Resource
     private AuthorizeService2 authorizeService2;
 
