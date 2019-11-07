@@ -32,7 +32,7 @@ zuul:
     # 每个host最大连接数
     maxPerRouteConnections: 20
   # 开启重试
-  retryable: true
+  retryable: false
   # 路径前面加一个前缀
   prefix: /api
   # 不代理某些服务，有些服务不对外公布，就可以在这里忽略掉

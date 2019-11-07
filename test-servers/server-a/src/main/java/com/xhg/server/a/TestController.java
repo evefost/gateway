@@ -31,6 +31,9 @@ public class TestController {
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
     public String queryInfo() {
+        if(true){
+            throw new RuntimeException("xxxxxxx");
+        }
         return "serverA info:"+port;
     }
 

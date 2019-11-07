@@ -24,3 +24,28 @@ refreshContext
 ApplicationContextInitializer
 
 刷新配置处理
+
+routFilter
+RibbonRoutingFilter
+fallback
+
+AbstractRibbonCommand
+execute
+失败如果fallback，处理fallback
+
+
+HystrixCommand#getFallbackObservable
+
+AbstractCommand#executeCommandAndObserve
+AbstractCommand#applyHystrixSemantics
+AbstractCommand#toObservable
+HystrixCommand#execute
+queue()
+toObservable()
+executeCommandAndObserve()
+executeCommandWithSpecifiedIsolation() 隔离模式
+getUserExecutionObservable（）
+getExecutionObservable（）
+AbstractRibbonCommand#run()接口，真正执行的地方
+RibbonLoadBalancingHttpClient#executeWithLoadBalancer
+

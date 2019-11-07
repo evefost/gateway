@@ -15,8 +15,8 @@ import javax.annotation.Resource;
 /**
  * 动态管理服务
  */
-@Aspect
-@Configuration
+//@Aspect
+//@Configuration
 public class TracfficAop {
 
     @Autowired

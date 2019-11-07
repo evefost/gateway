@@ -24,13 +24,18 @@ public class PageErrorController extends BasicErrorController {
     }
 
     private static final String PATH = "/error";
+
+    @Override
     @RequestMapping
     @ResponseBody
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+
         Map body = this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = this.getStatus(request);
+        ResponseBean<Object> error = ResponseBean.failure(status.value(),body.get("error").toString());
 
-        return new ResponseEntity("找不到页面-v0", status);
+
+        return new ResponseEntity(error, status);
     }
 
     @Override

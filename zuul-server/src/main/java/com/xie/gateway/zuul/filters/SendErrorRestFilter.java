@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.zuul.filters.post.SendErrorFilter;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.ERROR_TYPE;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SEND_ERROR_FILTER_ORDER;
 
 // 默认springcloud有一个errorfilter，会重定向到一个/error的路径
 // 如果要是自定义的errorfilter生效，关掉springcloud提供的这个errorfilter即可。
@@ -45,7 +46,7 @@ public class SendErrorRestFilter extends SendErrorFilter {
 
 	@Override
 	public int filterOrder() {
-		return 0;
+		return SEND_ERROR_FILTER_ORDER-1;
 	}
 
 	// 找出最初始的异常

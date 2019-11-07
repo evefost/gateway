@@ -23,7 +23,7 @@ import java.net.SocketTimeoutException;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SERVICE_ID_KEY;
 
 // 写一个默认的hystrix降级策略
-@Component
+//@Component
 // 如果没有这个配置项或者配置为false，就不实例化
 @ConditionalOnProperty(value = "gateway.zuul.defaultFallback.enabled", matchIfMissing = true)
 public class DefaultFallbackProvider implements FallbackProvider {

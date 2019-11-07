@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Set;
 
 
-@Configuration
+//@Configuration
 public class TracfficCommanFactoryConfiguration {
 
     @Bean
