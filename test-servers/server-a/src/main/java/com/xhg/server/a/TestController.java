@@ -30,10 +30,11 @@ public class TestController {
     private AuthorizeService2 authorizeService2;
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
-    public String queryInfo() {
-        if(true){
-            throw new RuntimeException("xxxxxxx");
-        }
+    public String queryInfo() throws InterruptedException {
+//        if(true){
+//            throw new RuntimeException("xxxxxxx");
+//        }
+        Thread.sleep(300);
         return "serverA info:"+port;
     }
 

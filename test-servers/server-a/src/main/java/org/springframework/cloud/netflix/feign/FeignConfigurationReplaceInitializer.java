@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
  * @author xieyang
  * @date 19/11/5
  */
-public class FeignEnableInitializer implements ApplicationContextInitializer {
+public class FeignConfigurationReplaceInitializer implements ApplicationContextInitializer {
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {

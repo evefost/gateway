@@ -40,6 +40,7 @@ eureka:
     #eureka 集群刷新间隔
     peer-eureka-nodes-update-interval-ms: 10000
 
+
   #当前服务实例信息(这里相于看作一个普通服务)
   instance:
     hostname: eureka1

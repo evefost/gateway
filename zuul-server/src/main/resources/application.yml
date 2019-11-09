@@ -3,7 +3,6 @@ info:
   contact: 系统网关服务
 server:
   port: 9000
-
 spring:
   application:
     name: gateway-server
@@ -15,6 +14,10 @@ spring:
   redis:
     cluster:
       nodes: 10.10.10.235:6379,10.10.10.235:6380,10.10.10.235:6381,10.10.10.234:6379,10.10.10.234:6380,10.10.10.234:6381
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
 
 mybatis-plus:
  mapper-locations: classpath:/mapper/*Mapper.xml
@@ -63,12 +66,12 @@ zuul:
 #      url: https://blog.csdn.net/
 ribbon:
   # 配置ribbon默认的超时时间
-  ConnectTimeout: 5000
-  ReadTimeout: 5000
+  ConnectTimeout: 100
+  ReadTimeout: 100
   # 是否开启重试
-  OkToRetryOnAllOperations: true
-  # 重试期间，实例切换次数
-  MaxAutoRetriesNextServer: 3
+  OkToRetryOnAllOperations: false
+  # 重试期间，实例切换次数，默认值1
+  MaxAutoRetriesNextServer: 1
   # 当前实例重试次数
   MaxAutoRetries: 0
 
@@ -82,8 +85,9 @@ hystrix:
           enabled: true
         isolation:
           thread:
-            # 命令执行超时时间 20秒
-            timeoutInMilliseconds: 40000
+            # 命令执行超时时间 20秒 需大于(ribbon的 readTimeout+connectTimeout)*(MaxAutoRetries+1)*(MaxAutoRetriesNextServer+1)
+            timeoutInMilliseconds: 400
+
 gateway:
   zuul:
     # 是否开启默认fallback

@@ -1,6 +1,6 @@
 # Application Context Initializers
 org.springframework.context.ApplicationContextInitializer=\
-org.springframework.cloud.netflix.feign.FeignEnableInitializer
+org.springframework.cloud.netflix.feign.FeignConfigurationReplaceInitializer
 
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 feign.FeignClientExtendAutoConfig

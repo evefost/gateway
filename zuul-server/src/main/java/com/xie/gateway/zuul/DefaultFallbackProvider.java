@@ -4,7 +4,6 @@ package com.xie.gateway.zuul;
 import com.alibaba.fastjson.JSON;
 import com.netflix.zuul.context.RequestContext;
 import com.xie.gateway.vo.ResponseBean;
-import org.apache.http.conn.HttpHostConnectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,42 +17,76 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.nio.charset.Charset;
 
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SERVICE_ID_KEY;
-
-// 写一个默认的hystrix降级策略
-//@Component
-// 如果没有这个配置项或者配置为false，就不实例化
+/**
+ * @author xieyang
+ */
+@Component
 @ConditionalOnProperty(value = "gateway.zuul.defaultFallback.enabled", matchIfMissing = true)
 public class DefaultFallbackProvider implements FallbackProvider {
+
     protected final static Logger logger = LoggerFactory.getLogger(DefaultFallbackProvider.class);
 
     @Override
     public String getRoute() {
-        // null 或者 *  代表为默认的fallback
-        // route对应eureka中的服务名 或者 你自己在配置文件中 配置的serviceId
         return "*";
     }
 
     @Override
     public ClientHttpResponse fallbackResponse() {
-        return new FallbackRespone();
+        return new FallbackResponse();
     }
 
     @Override
     public ClientHttpResponse fallbackResponse(Throwable cause) {
-        return new FallbackRespone(cause);
+        Throwable rootCause = findCause(cause);
+        RequestContext currentContext = RequestContext.getCurrentContext();
+        String serviceId = (String) currentContext.get("serviceId");
+        String requestURI = (String) currentContext.get("requestURI");
+        ResponseBean<Object> response;
+        int status = 500;
+        String message;
+        if (rootCause instanceof SocketTimeoutException) {
+            message = "请求服务超时";
+        } else if (rootCause instanceof ConnectException) {
+            message = "连接服务失败";
+        } else {
+            message = "网关调用服务出错";
+
+        }
+        response = ResponseBean.failure(status,message);
+        String fallbackBody  = JSON.toJSONString(response);
+        logger.error("{}: code[{}] forword [{}->{}] cause [{}]", message,status,serviceId, requestURI, rootCause.getMessage());
+        return new FallbackResponse(fallbackBody,status);
     }
 
-    class FallbackRespone extends AbstractClientHttpResponse {
-        private Throwable cause;
 
-        public FallbackRespone() {
+
+    private Throwable findCause(Throwable root) {
+        Throwable cause = root.getCause();
+        if (cause == null) {
+            return root;
+        }
+        return findCause(cause);
+    }
+
+    class FallbackResponse extends AbstractClientHttpResponse {
+
+        private int status = 500;
+
+        private String fallbackBody;
+
+        private InputStream inputStream;
+
+        public FallbackResponse() {
         }
 
-        public FallbackRespone(Throwable cause) {
-            this.cause = cause;
+        public FallbackResponse(String fallbackBody,int status) {
+            this.fallbackBody = fallbackBody;
+            this.status = status;
         }
 
         @Override
@@ -64,31 +97,10 @@ public class DefaultFallbackProvider implements FallbackProvider {
 
         @Override
         public InputStream getBody() throws IOException {
-            RequestContext currentContext = RequestContext.getCurrentContext();
-            String serviceId = (String) currentContext.get(SERVICE_ID_KEY);
-            ResponseBean<Object> respone = null;
-            Throwable rootCause = findCause(this.cause);
-            logger.error("调用异常信息 [{}]",serviceId, rootCause);
-            if (rootCause instanceof SocketTimeoutException) {
-                respone = ResponseBean.failure("请求服务超时");
-            } else if (rootCause instanceof HttpHostConnectException) {
-                respone = ResponseBean.failure("连接服务失败");
-            } else {
-                respone = ResponseBean.failure("网关调用服务出错");
-            }
-
-
-            String result = JSON.toJSONString(respone);
-            return new ByteArrayInputStream(result.getBytes());
+            inputStream = new ByteArrayInputStream(fallbackBody.getBytes(Charset.forName("UTF-8")));
+            return inputStream;
         }
 
-        private Throwable findCause(Throwable root) {
-            Throwable cause = root.getCause();
-            if (cause == null) {
-                return root;
-            }
-            return findCause(cause);
-        }
 
         @Override
         public String getStatusText() throws IOException {
@@ -97,17 +109,23 @@ public class DefaultFallbackProvider implements FallbackProvider {
 
         @Override
         public HttpStatus getStatusCode() throws IOException {
-            return HttpStatus.BAD_GATEWAY;
+            return HttpStatus.valueOf(status);
         }
 
         @Override
         public int getRawStatusCode() throws IOException {
-            return 502;
+            return status;
         }
 
         @Override
         public void close() {
-
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
