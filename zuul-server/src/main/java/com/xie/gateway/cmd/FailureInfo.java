@@ -8,7 +8,7 @@ public class FailureInfo {
 
     private Throwable cause;
 
-    private FailureType failureType;
+    private ExecuteResultType failureType;
 
     public Throwable getCause() {
         return cause;
@@ -18,11 +18,11 @@ public class FailureInfo {
         this.cause = cause;
     }
 
-    public FailureType getFailureType() {
+    public ExecuteResultType getFailureType() {
         return failureType;
     }
 
-    public void setFailureType(FailureType failureType) {
+    public void setFailureType(ExecuteResultType failureType) {
         this.failureType = failureType;
     }
 }

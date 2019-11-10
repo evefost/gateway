@@ -12,27 +12,26 @@ public interface CommandListener {
 
     /**
      *  成功回调
-     * @param cmd
      */
-    void onSuccess( HystrixCommand cmd);
+    void onSuccess( CommandInfo commandInfo);
 
 
     /**
      * 失败回调
-     * @param cmd
+     * @param commandInfo
      */
-    void onFailure(HystrixCommand cmd,FailureInfo failureInfo);
+    void onFailure(CommandInfo commandInfo);
 
 
     /**
      * 熔断器打开（粒度为接口级）
      */
-    void onCircuitBreakerOpen(HystrixCommand cmd);
+    void onCircuitBreakerOpen(CommandInfo commandInfo);
 
     /**
      * 熔断器关闭 （粒度为接口级）
      */
-    void onCircuitBreakerClose(HystrixCommand cmd);
+    void onCircuitBreakerClose(CommandInfo commandInfo);
 
 
 

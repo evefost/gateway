@@ -21,16 +21,21 @@ public class ReRestClientRibbonCommandFactory extends RestClientRibbonCommandFac
 
     private ZuulProperties zuulProperties;
 
+    private  CommandListener commandListener;
+
     public ReRestClientRibbonCommandFactory(SpringClientFactory clientFactory) {
-        this(clientFactory, new ZuulProperties(), Collections.<ZuulFallbackProvider>emptySet());
+        this(clientFactory, new ZuulProperties(), Collections.<ZuulFallbackProvider>emptySet(),null);
     }
 
-    public ReRestClientRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<ZuulFallbackProvider> zuulFallbackProviders) {
+    public ReRestClientRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<ZuulFallbackProvider> zuulFallbackProviders,CommandListener commandListener) {
         super(clientFactory, zuulProperties, zuulFallbackProviders);
         this.clientFactory = clientFactory;
         this.zuulProperties = zuulProperties;
+        this.commandListener = commandListener;
 
     }
+
+
 
     @Override
     @SuppressWarnings("deprecation")

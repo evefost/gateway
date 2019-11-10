@@ -1,5 +1,6 @@
 package com.xie.gateway.cmd.factory;
 
+import com.xie.gateway.cmd.CommandListener;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.okhttp.OkHttpLoadBalancingClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
@@ -19,16 +20,19 @@ public class ReOkHttpRibbonCommandFactory extends OkHttpRibbonCommandFactory {
     private final SpringClientFactory clientFactory;
 
     private final ZuulProperties zuulProperties;
+    private CommandListener commandListener;
 
     public ReOkHttpRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
-        this(clientFactory, zuulProperties, Collections.<ZuulFallbackProvider>emptySet());
+        this(clientFactory, zuulProperties, Collections.<ZuulFallbackProvider>emptySet(),null);
     }
 
-    public ReOkHttpRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<ZuulFallbackProvider> zuulFallbackProviders) {
+    public ReOkHttpRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties, Set<ZuulFallbackProvider> zuulFallbackProviders,CommandListener commandListener) {
         super(clientFactory, zuulProperties, zuulFallbackProviders);
         this.clientFactory = clientFactory;
         this.zuulProperties = zuulProperties;
+        this.commandListener = commandListener;
     }
+
 
     @Override
     public OkHttpRibbonCommand create(final RibbonCommandContext context) {

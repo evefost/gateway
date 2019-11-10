@@ -59,9 +59,9 @@ public class RibbonCommandFactoryConfiguration {
 		@Bean
 		@ConditionalOnMissingBean
 		public RibbonCommandFactory<?> ribbonCommandFactory(
-				SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
+				SpringClientFactory clientFactory, ZuulProperties zuulProperties,CommandListener commandListener) {
 			return new ReRestClientRibbonCommandFactory(clientFactory, zuulProperties,
-					zuulFallbackProviders);
+					zuulFallbackProviders,commandListener);
 		}
 	}
 
@@ -76,9 +76,9 @@ public class RibbonCommandFactoryConfiguration {
 		@Bean
 		@ConditionalOnMissingBean
 		public RibbonCommandFactory<?> ribbonCommandFactory(
-				SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
+				SpringClientFactory clientFactory, ZuulProperties zuulProperties,CommandListener commandListener) {
 			return new ReOkHttpRibbonCommandFactory(clientFactory, zuulProperties,
-					zuulFallbackProviders);
+					zuulFallbackProviders,commandListener);
 		}
 	}
 

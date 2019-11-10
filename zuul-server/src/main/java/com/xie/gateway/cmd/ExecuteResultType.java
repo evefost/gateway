@@ -6,7 +6,12 @@ package com.xie.gateway.cmd;
  * @author xieyang
  * @date 19/11/9
  */
-public enum FailureType {
+public enum ExecuteResultType {
+
+    /**
+     *成功
+     */
+    SUCCESS,
     /**
      * 熔断打开
      */
@@ -21,6 +26,12 @@ public enum FailureType {
      * 响应超时
      */
     RESPONSE_TIMEDOUT,
+
+
+    /**
+     * 连接失败
+     */
+    CONNECT_FAILURE,
 
     /**
      *

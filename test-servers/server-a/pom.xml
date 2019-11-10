@@ -27,14 +27,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-feign</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
         </dependency>
+
         <!-- spring-boot-starter-actuator 管理工具/web 查看堆栈，动态刷新配置 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -45,6 +47,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.7</version>
         </dependency>
+
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${version}</finalName>

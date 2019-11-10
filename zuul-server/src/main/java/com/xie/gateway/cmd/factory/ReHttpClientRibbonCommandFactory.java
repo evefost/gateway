@@ -1,7 +1,7 @@
 package com.xie.gateway.cmd.factory;
 
 import com.xie.gateway.cmd.CommandListener;
-import com.xie.gateway.cmd.ReHttpClientRibbonCommand;
+import com.xie.gateway.cmd.cmd.ReHttpClientRibbonCommand;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;

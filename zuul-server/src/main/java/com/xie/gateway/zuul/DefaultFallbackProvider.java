@@ -2,6 +2,7 @@
 package com.xie.gateway.zuul;
 
 import com.alibaba.fastjson.JSON;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.zuul.context.RequestContext;
 import com.xie.gateway.vo.ResponseBean;
 import org.slf4j.Logger;
