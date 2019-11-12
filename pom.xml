@@ -19,6 +19,7 @@
         <module>zuul-server</module>
         <module>test-servers</module>
         <module>eureka-server</module>
+        <module>hystrix-extennd</module>
     </modules>
 
     <properties>
