@@ -45,8 +45,6 @@ public class DefaultFallbackProvider implements FallbackProvider {
     public ClientHttpResponse fallbackResponse(Throwable cause) {
         Throwable rootCause = findCause(cause);
         RequestContext currentContext = RequestContext.getCurrentContext();
-        String serviceId = (String) currentContext.get("serviceId");
-        String requestURI = (String) currentContext.get("requestURI");
         ResponseBean<Object> response;
         int status = 500;
         String message;
@@ -60,7 +58,7 @@ public class DefaultFallbackProvider implements FallbackProvider {
         }
         response = ResponseBean.failure(status,message);
         String fallbackBody  = JSON.toJSONString(response);
-        logger.error("{}: code[{}] forword [{}->{}] cause [{}]", message,status,serviceId, requestURI, rootCause.getMessage());
+        logger.error("{}: code[{}] forword [{}->{}] cause [{}]", message,status,rootCause.getMessage());
         return new FallbackResponse(fallbackBody,status);
     }
 

@@ -1,4 +1,4 @@
-package hystrix;
+package other;
 
 public class BusinessException extends RuntimeException{
 

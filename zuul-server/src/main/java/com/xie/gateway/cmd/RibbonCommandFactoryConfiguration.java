@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 import java.util.Collections;
 import java.util.Set;
 
+import com.eve.hystrix.extend.core.CommandListener;
 import com.xie.gateway.cmd.factory.ReHttpClientRibbonCommandFactory;
 import com.xie.gateway.cmd.factory.ReOkHttpRibbonCommandFactory;
 import com.xie.gateway.cmd.factory.ReRestClientRibbonCommandFactory;
@@ -42,6 +43,7 @@ import org.springframework.cloud.netflix.zuul.filters.route.okhttp.OkHttpRibbonC
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * @author Dave Syer
@@ -57,7 +59,7 @@ public class RibbonCommandFactoryConfiguration {
 		private Set<ZuulFallbackProvider> zuulFallbackProviders = Collections.emptySet();
 
 		@Bean
-		@ConditionalOnMissingBean
+		@Primary
 		public RibbonCommandFactory<?> ribbonCommandFactory(
 				SpringClientFactory clientFactory, ZuulProperties zuulProperties,CommandListener commandListener) {
 			return new ReRestClientRibbonCommandFactory(clientFactory, zuulProperties,
@@ -74,7 +76,7 @@ public class RibbonCommandFactoryConfiguration {
 		private Set<ZuulFallbackProvider> zuulFallbackProviders = Collections.emptySet();
 
 		@Bean
-		@ConditionalOnMissingBean
+		@Primary
 		public RibbonCommandFactory<?> ribbonCommandFactory(
 				SpringClientFactory clientFactory, ZuulProperties zuulProperties,CommandListener commandListener) {
 			return new ReOkHttpRibbonCommandFactory(clientFactory, zuulProperties,
@@ -90,7 +92,7 @@ public class RibbonCommandFactoryConfiguration {
 		private Set<ZuulFallbackProvider> zuulFallbackProviders = Collections.emptySet();
 
 		@Bean
-		@ConditionalOnMissingBean
+		@Primary
 		public RibbonCommandFactory<?> ribbonCommandFactory(
 				SpringClientFactory clientFactory, ZuulProperties zuulProperties,CommandListener commandListener) {
 			return new ReHttpClientRibbonCommandFactory(clientFactory, zuulProperties, zuulFallbackProviders,commandListener);

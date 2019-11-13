@@ -1,4 +1,4 @@
-package hystrix;
+package com.eve.hystrix.extend;
 
 public class HystrixException extends RuntimeException{
 

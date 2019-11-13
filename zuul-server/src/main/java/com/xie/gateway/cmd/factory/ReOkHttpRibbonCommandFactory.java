@@ -1,6 +1,7 @@
 package com.xie.gateway.cmd.factory;
 
-import com.xie.gateway.cmd.CommandListener;
+import com.eve.hystrix.extend.core.CommandListener;
+import com.xie.gateway.cmd.cmd.ReOkHttpRibbonCommand;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.okhttp.OkHttpLoadBalancingClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
@@ -42,7 +43,7 @@ public class ReOkHttpRibbonCommandFactory extends OkHttpRibbonCommandFactory {
                 serviceId, OkHttpLoadBalancingClient.class);
         client.setLoadBalancer(this.clientFactory.getLoadBalancer(serviceId));
 
-        return new OkHttpRibbonCommand(serviceId, client, context, zuulProperties, fallbackProvider,
-                clientFactory.getClientConfig(serviceId));
+        return new ReOkHttpRibbonCommand(serviceId, client, context, zuulProperties, fallbackProvider,
+                clientFactory.getClientConfig(serviceId),commandListener);
     }
 }

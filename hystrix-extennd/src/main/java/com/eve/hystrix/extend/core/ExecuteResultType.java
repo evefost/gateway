@@ -1,4 +1,4 @@
-package com.xie.gateway.cmd;
+package com.eve.hystrix.extend.core;
 
 /**
  *
@@ -36,6 +36,11 @@ public enum ExecuteResultType {
     /**
      *
      */
-    OTHER
+    OTHER,
+
+    /**
+     *
+     */
+    UNKNOW
 
 }

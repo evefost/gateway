@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
-    public String addCompose() {
-        return "serverC info";
+
+    public void addCompose() {
+
     }
 
 }

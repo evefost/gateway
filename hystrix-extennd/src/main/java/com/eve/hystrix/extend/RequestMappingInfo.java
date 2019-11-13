@@ -1,6 +1,5 @@
-package hystrix;
+package com.eve.hystrix.extend;
 
-import com.netflix.hystrix.HystrixCommand;
 import java.lang.reflect.Method;
 import java.util.Map;
 

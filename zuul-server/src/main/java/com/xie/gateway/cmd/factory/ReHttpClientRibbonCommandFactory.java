@@ -1,6 +1,6 @@
 package com.xie.gateway.cmd.factory;
 
-import com.xie.gateway.cmd.CommandListener;
+import com.eve.hystrix.extend.core.CommandListener;
 import com.xie.gateway.cmd.cmd.ReHttpClientRibbonCommand;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;
@@ -22,7 +22,7 @@ public class ReHttpClientRibbonCommandFactory extends HttpClientRibbonCommandFac
 
     private final ZuulProperties zuulProperties;
 
-    private  CommandListener commandListener;
+    private CommandListener commandListener;
 
     public ReHttpClientRibbonCommandFactory(SpringClientFactory clientFactory, ZuulProperties zuulProperties) {
         this(clientFactory, zuulProperties, Collections.<ZuulFallbackProvider>emptySet(),null);

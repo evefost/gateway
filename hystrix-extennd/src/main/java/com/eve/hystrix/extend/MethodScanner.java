@@ -1,10 +1,11 @@
-package hystrix;
+package com.eve.hystrix.extend;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -38,6 +39,10 @@ public class MethodScanner implements BeanClassLoaderAware, EnvironmentAware, Re
 
 
     protected ClassLoader classLoader;
+
+    public MethodScanner(Environment environment){
+        this.environment = environment;
+    }
 
 
     @Override
@@ -149,16 +154,16 @@ public class MethodScanner implements BeanClassLoaderAware, EnvironmentAware, Re
         }
         RequestMappingInfo clientMapping = new RequestMappingInfo();
         clientMapping.setUrl(url);
-        if (targetClass.isAnnotationPresent(XhgCommand.class)) {
-            parseXhgCommand(targetClass.getAnnotation(XhgCommand.class),clientMapping,tempMethods);
+        if (targetClass.isAnnotationPresent(XCommand.class)) {
+            parseXhgCommand(targetClass.getAnnotation(XCommand.class),clientMapping,tempMethods);
         }
         for (Method method : methods) {
             RequestMappingInfo mappingInfo = new RequestMappingInfo();
             mappingInfo.setClazz(targetClass);
             mappingInfo.setAppName(applicationName);
             mappingInfo.setMethod(method);
-            if (method.isAnnotationPresent(XhgCommand.class)) {
-                parseXhgCommand(method.getAnnotation(XhgCommand.class), mappingInfo, tempMethods);
+            if (method.isAnnotationPresent(XCommand.class)) {
+                parseXhgCommand(method.getAnnotation(XCommand.class), mappingInfo, tempMethods);
                 parseRequestMapping(method, mappingInfo);
                 mergeInfo(clientMapping, mappingInfo);
                 requestMappings.put(method, mappingInfo);
@@ -167,7 +172,7 @@ public class MethodScanner implements BeanClassLoaderAware, EnvironmentAware, Re
     }
 
 
-    private void parseXhgCommand(XhgCommand cmd ,RequestMappingInfo mappingInfo,Map<String,Method> tempMethods){
+    private void parseXhgCommand(XCommand cmd , RequestMappingInfo mappingInfo, Map<String,Method> tempMethods){
         if (cmd.timeoutInMilliseconds() > 0) {
             mappingInfo.setExecutionTimeoutInMilliseconds(cmd.timeoutInMilliseconds());
         }

@@ -1,14 +1,17 @@
-package com.xie.gateway.cmd.cmd;
+package com.eve.hystrix.extend;
 
+import com.eve.hystrix.extend.core.CommandInfo;
+import com.eve.hystrix.extend.core.CommandListener;
+import com.eve.hystrix.extend.core.ExecuteResultType;
 import com.netflix.hystrix.HystrixCommand;
-import com.xie.gateway.cmd.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import static com.xie.gateway.cmd.ExecuteResultType.OTHER;
+import static com.eve.hystrix.extend.core.ExecuteResultType.OTHER;
 
 /**
  *
@@ -17,14 +20,51 @@ import static com.xie.gateway.cmd.ExecuteResultType.OTHER;
  */
 public class CommandSupport {
 
-    protected final static Logger logger = LoggerFactory.getLogger(DefaultCommandListener.class);
+    protected final static Logger logger = LoggerFactory.getLogger(CommandSupport.class);
 
 
-    public static CommandInfo buildFailureInfo(HystrixCommand command){
+    public static CommandInfo buildCommandInfo(HystrixCommand command,CommandListener listener){
         CommandInfo commandInfo = new CommandInfo();
-        ExecuteResultType failureType = getFailureType(command);
-        commandInfo.setExecuteResultType(failureType);
+        commandInfo.setExecuteResultType(ExecuteResultType.UNKNOW);
+        commandInfo.setCommand(command);
+        commandInfo.setListener(listener);
+        if(listener != null){
+            try{
+                listener.onCommandCreate(commandInfo);
+            }catch (Throwable throwable){
+                logger.warn(" onCommandCreate call back error  ",throwable);
+            }
+        }
         return commandInfo;
+    }
+
+    public static void onSuccess(CommandInfo commandInfo){
+        commandInfo.setExecuteResultType(ExecuteResultType.SUCCESS);
+        CommandListener listener = commandInfo.getListener();
+        if(listener != null){
+            try{
+                listener.onSuccess(commandInfo);
+            }catch (Throwable throwable){
+                logger.warn(" onCommandSuccess call back error  ",throwable);
+            }
+
+        }
+
+    }
+
+    public static void onFailure(CommandInfo commandInfo){
+        HystrixCommand command = commandInfo.getCommand();
+        commandInfo.setExecuteResultType(getFailureType(command));
+        CommandListener listener = commandInfo.getListener();
+        if(listener != null){
+
+            try{
+                listener.onFailure(commandInfo);
+            }catch (Throwable throwable){
+                logger.warn(" onCommandFailure call back error  ",throwable);
+            }
+        }
+
     }
 
 

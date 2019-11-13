@@ -48,6 +48,12 @@
             <version>1.2.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.xie.java</groupId>
+            <artifactId>hystrix-extennd</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${version}</finalName>

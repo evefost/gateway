@@ -1,7 +1,7 @@
 package com.xie.gateway.cmd.factory;
 
+import com.eve.hystrix.extend.core.CommandListener;
 import com.netflix.niws.client.http.RestClient;
-import com.xie.gateway.cmd.CommandListener;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.RestClientRibbonCommand;
@@ -21,7 +21,7 @@ public class ReRestClientRibbonCommandFactory extends RestClientRibbonCommandFac
 
     private ZuulProperties zuulProperties;
 
-    private  CommandListener commandListener;
+    private CommandListener commandListener;
 
     public ReRestClientRibbonCommandFactory(SpringClientFactory clientFactory) {
         this(clientFactory, new ZuulProperties(), Collections.<ZuulFallbackProvider>emptySet(),null);

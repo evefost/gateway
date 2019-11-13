@@ -1,5 +1,6 @@
 package com.xhg.server.a;
 
+import com.eve.hystrix.extend.XCommand;
 import com.xhg.test.common.UserBean;
 import feign.FeignClientConfigRefresh;
 import org.springframework.beans.BeansException;
@@ -44,8 +45,9 @@ public class TestController2 implements ApplicationContextAware {
         return s;
     }
 
+    @XCommand
     @RequestMapping(value = "getUser",method = RequestMethod.GET)
-    public String getUser() {
+    public ResponseBean getUser() {
         return serverC.addCompose();
     }
 

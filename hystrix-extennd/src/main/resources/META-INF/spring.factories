@@ -1,0 +1,6 @@
+# Application Context Initializers
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.eve.hystrix.extend.config.HystrixAutoConfig
+
+
+

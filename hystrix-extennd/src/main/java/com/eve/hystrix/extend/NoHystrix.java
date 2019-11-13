@@ -1,4 +1,4 @@
-package hystrix;
+package com.eve.hystrix.extend;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

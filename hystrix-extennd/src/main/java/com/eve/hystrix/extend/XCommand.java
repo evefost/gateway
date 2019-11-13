@@ -1,10 +1,7 @@
-package hystrix;
+package com.eve.hystrix.extend;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
+
 
 /**
  * 熔断接口标识
@@ -13,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(value= {ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface XhgCommand {
+public @interface XCommand {
 
 	/**
 	 * 请求超时间
