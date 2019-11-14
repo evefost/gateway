@@ -3,6 +3,7 @@ package com.eve.hystrix.extend.config;
 import com.eve.hystrix.extend.MethodScanner;
 import com.eve.hystrix.extend.RequestMappingInfo;
 import com.eve.hystrix.extend.core.HystrixAspect;
+import com.eve.hystrix.extend.feign.FeignClientBeanProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -15,15 +16,24 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author xieyang
+ */
 @Component
-@ConditionalOnProperty(name = "xhg.hystrix.enable",matchIfMissing = true)
+@ConditionalOnProperty(name = "hystrix.enable", matchIfMissing = true)
 public class HystrixAutoConfig implements SmartInitializingSingleton {
+
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Bean
     HystrixAspect getHystrixControllerAspect(){
         return new HystrixAspect();
+    }
+
+    @Bean
+    FeignClientBeanProcessor feignClientBeanProcessor() {
+        return new FeignClientBeanProcessor();
     }
 
     @Bean

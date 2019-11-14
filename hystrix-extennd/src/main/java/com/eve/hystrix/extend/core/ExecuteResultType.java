@@ -41,6 +41,6 @@ public enum ExecuteResultType {
     /**
      *
      */
-    UNKNOW
+    UNKNOWN
 
 }

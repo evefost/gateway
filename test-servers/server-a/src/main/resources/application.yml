@@ -3,9 +3,22 @@ info:
   contact: 服务A
 server:
   port: 9001
+  undertow:
+    max-http-post-size: 100000000
+  tomcat:
+    max-http-post-size: 1048576
 
+#  spring.http.multipart.maxFileSize = 10Mb
+#  spring.http.multipart.maxRequestSize=100Mb
 spring:
   application:
     name: server-a
+    http-multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 10Mb
+  http:
+    multipart:
+      max-request-size: 10Mb
+      max-file-size: 10Mb
 ms-url:
   server-b: http://localhost:9002

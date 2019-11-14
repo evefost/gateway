@@ -2,12 +2,11 @@ package com.eve.hystrix.extend;
 
 import com.eve.hystrix.extend.core.CommandInfo;
 import com.eve.hystrix.extend.core.CommandListener;
+import com.eve.hystrix.extend.core.HystrixFallback;
 import com.netflix.hystrix.*;
 import com.netflix.hystrix.HystrixCommandGroupKey.Factory;
-import com.netflix.hystrix.strategy.properties.HystrixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import other.BusinessException;
 
 import java.lang.reflect.Method;
 
@@ -20,27 +19,30 @@ public class XHystrixCommand extends HystrixCommand<Object> {
     private Logger logger = LoggerFactory.getLogger(XHystrixCommand.class);
 
 
-
     private RequestMappingInfo mappingInfo;
 
-    private CommandListener listener;
+    private CommandListener commandListener;
 
     private CommandInfo commandInfo;
+
+    private HystrixFallback defaultFallback;
 
     private Object target;
 
     private Object[] args;
 
 
-    public XHystrixCommand(RequestMappingInfo mappingInfo, Object target, Object[] args,
+    public XHystrixCommand(RequestMappingInfo mappingInfo, Object target, Object[] args, HystrixFallback defaultFallback,
                            CommandListener listener) {
         super(createSetter(mappingInfo));
         this.mappingInfo = mappingInfo;
         this.target = target;
         this.args = args;
-        this.listener = listener;
-        this.commandInfo = CommandSupport.buildCommandInfo(this, this.listener);
-
+        this.commandListener = listener;
+        this.defaultFallback = defaultFallback;
+        this.commandInfo = CommandSupport.buildCommandInfo(this, this.commandListener);
+        this.commandInfo.setServiceId(mappingInfo.getAppName());
+        this.commandInfo.setUri(mappingInfo.getUrl());
     }
 
     public static Setter createSetter(RequestMappingInfo mappingInfo) {
@@ -49,11 +51,11 @@ public class XHystrixCommand extends HystrixCommand<Object> {
         HystrixCommandProperties.Setter commandProperties = HystrixCommandProperties.Setter();
         if (mappingInfo.getExecutionTimeoutInMilliseconds() != null) {
             commandProperties
-                .withExecutionTimeoutInMilliseconds(mappingInfo.getExecutionTimeoutInMilliseconds());
+                    .withExecutionTimeoutInMilliseconds(mappingInfo.getExecutionTimeoutInMilliseconds());
         }
         if (mappingInfo.getCircuitBreakerErrorThresholdPercentage() > 0) {
             commandProperties
-                .withCircuitBreakerErrorThresholdPercentage(mappingInfo.getCircuitBreakerErrorThresholdPercentage());
+                    .withCircuitBreakerErrorThresholdPercentage(mappingInfo.getCircuitBreakerErrorThresholdPercentage());
         }
         //线程池配置
         HystrixThreadPoolProperties.Setter threadPoolProperties = HystrixThreadPoolProperties.Setter();
@@ -68,34 +70,44 @@ public class XHystrixCommand extends HystrixCommand<Object> {
         }
 
         Setter setter = Setter.withGroupKey(Factory.asKey(groupKey))
-            .andCommandKey(HystrixCommandKey.Factory
-                .asKey(commandKey))
-            .andCommandPropertiesDefaults(commandProperties)
-            .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(groupKey))
-            .andThreadPoolPropertiesDefaults(threadPoolProperties);
+                .andCommandKey(HystrixCommandKey.Factory
+                        .asKey(commandKey))
+                .andCommandPropertiesDefaults(commandProperties)
+                .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(groupKey))
+                .andThreadPoolPropertiesDefaults(threadPoolProperties);
         return setter;
     }
 
 
     @Override
     protected Object run() throws Exception {
-       try {
-
-           Object result = mappingInfo.getMethod().invoke(target, args);
-           CommandSupport.onSuccess(commandInfo);
-           return result;
-       }finally {
-           if(listener != null){
-               listener.onComplete(commandInfo);
-           }
-       }
+        try {
+            Object result = mappingInfo.getMethod().invoke(target, args);
+            CommandSupport.onSuccess(commandInfo);
+            return result;
+        } finally {
+            if (commandListener != null) {
+                try {
+                    commandListener.onComplete(commandInfo);
+                } catch (Throwable throwable) {
+                    logger.warn("command onComplete callback error ", throwable);
+                }
+            }
+        }
     }
-
-
 
 
     @Override
     protected Object getFallback() {
+        try {
+            return processFallback();
+        } finally {
+            CommandSupport.onFailure(commandInfo);
+        }
+    }
+
+
+    private Object processFallback() {
         Object result = null;
         Method fallbackMethod = mappingInfo.getFallbackMethod();
         if (fallbackMethod != null) {
@@ -110,17 +122,9 @@ public class XHystrixCommand extends HystrixCommand<Object> {
                 logger.error("用户自定义fallback:{}失败:", mappingInfo.getMethod().toString(), e);
             }
         }
-        if(result == null){
-            return defaultFallback();
+        if (result == null && defaultFallback != null) {
+            return defaultFallback.getFallbackData();
         }
-        CommandSupport.onFailure(commandInfo);
-        return result;
+        return super.getFallback();
     }
-
-
-    private Object defaultFallback() {
-       return null;
-    }
-
-
 }

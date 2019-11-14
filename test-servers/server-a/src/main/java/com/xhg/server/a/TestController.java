@@ -33,9 +33,9 @@ public class TestController {
 
     @RequestMapping(value = "queryInfo",method = RequestMethod.GET)
     public String queryInfo() throws InterruptedException {
-//        if(true){
-//            throw new RuntimeException("xxxxxxx");
-//        }
+        if(true){
+            throw new RuntimeException("xxxxxxx");
+        }
 //        Thread.sleep(300);
         return "serverA info:"+port;
     }

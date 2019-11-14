@@ -6,7 +6,6 @@ import com.eve.hystrix.extend.core.ExecuteResultType;
 import com.netflix.hystrix.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -25,14 +24,14 @@ public class CommandSupport {
 
     public static CommandInfo buildCommandInfo(HystrixCommand command,CommandListener listener){
         CommandInfo commandInfo = new CommandInfo();
-        commandInfo.setExecuteResultType(ExecuteResultType.UNKNOW);
+        commandInfo.setExecuteResultType(ExecuteResultType.UNKNOWN);
         commandInfo.setCommand(command);
         commandInfo.setListener(listener);
         if(listener != null){
             try{
                 listener.onCommandCreate(commandInfo);
             }catch (Throwable throwable){
-                logger.warn(" onCommandCreate call back error  ",throwable);
+                logger.warn("command onCommandCreate call back error  ", throwable);
             }
         }
         return commandInfo;
@@ -45,7 +44,7 @@ public class CommandSupport {
             try{
                 listener.onSuccess(commandInfo);
             }catch (Throwable throwable){
-                logger.warn(" onCommandSuccess call back error  ",throwable);
+                logger.warn("command onCommandSuccess call back error  ", throwable);
             }
 
         }
@@ -57,11 +56,10 @@ public class CommandSupport {
         commandInfo.setExecuteResultType(getFailureType(command));
         CommandListener listener = commandInfo.getListener();
         if(listener != null){
-
             try{
                 listener.onFailure(commandInfo);
             }catch (Throwable throwable){
-                logger.warn(" onCommandFailure call back error  ",throwable);
+                logger.warn("command  onCommandFailure call back error  ", throwable);
             }
         }
 
@@ -81,7 +79,7 @@ public class CommandSupport {
             if(ex != null){
                 Throwable cause = findCause(ex);
                 if (cause instanceof SocketTimeoutException) {
-                    logger.debug(" is ribbon  time out");
+                    logger.warn(" is ribbon  time out");
                     failureType= ExecuteResultType.RESPONSE_TIMEDOUT;
                 } else if (cause instanceof ConnectException) {
                     failureType= ExecuteResultType.CONNECT_FAILURE;

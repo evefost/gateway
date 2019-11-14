@@ -6,6 +6,8 @@ import com.eve.hystrix.extend.core.CommandListener;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.client.http.HttpRequest;
 import com.netflix.niws.client.http.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.RestClientRibbonCommand;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
@@ -20,7 +22,7 @@ import java.io.InputStream;
  * Created by xieyang on 19/11/10.
  */
 public class ReRestClientRibbonCommand extends RestClientRibbonCommand {
-
+    protected Logger logger = LoggerFactory.getLogger(getClass());
     private CommandListener commandListener;
 
     private CommandInfo commandInfo;
@@ -59,7 +61,13 @@ public class ReRestClientRibbonCommand extends RestClientRibbonCommand {
             CommandSupport.onSuccess(commandInfo);
             return response;
         }finally {
-            commandListener.onComplete(commandInfo);
+            if (commandListener != null) {
+                try {
+                    commandListener.onComplete(commandInfo);
+                } catch (Throwable throwable) {
+                    logger.warn("command onComplete callback error ", throwable);
+                }
+            }
         }
     }
 

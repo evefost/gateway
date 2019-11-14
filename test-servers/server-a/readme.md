@@ -41,7 +41,11 @@ AbstractCommand#applyHystrixSemantics
 AbstractCommand#toObservable
 HystrixCommand#execute
 queue()
-toObservable()
+toObservable()真正的处理逻辑开始
+applyHystrixSemantics()判断是否可执行，如果不可执行走熔断handleShortCircuitViaFallback，
+如果可以执行走正常流程
+handleShortCircuitViaFallback()创建一下异常
+
 executeCommandAndObserve()
 executeCommandWithSpecifiedIsolation() 隔离模式
 getUserExecutionObservable（）

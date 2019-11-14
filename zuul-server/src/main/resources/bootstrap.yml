@@ -5,7 +5,7 @@ eureka:
     # 服务列表缓存更新时间
     registryFetchIntervalSeconds: 10
     serviceUrl:
-      defaultZone: ${eureka_serviceUrl:http://localhost:8761/eureka/}
+      defaultZone: ${eureka_serviceUrl:http://dev-ds.rainbowcn.com/ms/register/eureka/}
   instance:
     # 心跳间隔
     leaseRenewalIntervalInSeconds: 10

@@ -16,14 +16,6 @@
 
 package com.xie.gateway.cmd;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Collections;
-import java.util.Set;
-
 import com.eve.hystrix.extend.core.CommandListener;
 import com.xie.gateway.cmd.factory.ReHttpClientRibbonCommandFactory;
 import com.xie.gateway.cmd.factory.ReOkHttpRibbonCommandFactory;
@@ -31,19 +23,19 @@ import com.xie.gateway.cmd.factory.ReRestClientRibbonCommandFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
-import org.springframework.cloud.netflix.zuul.filters.route.RestClientRibbonCommandFactory;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandFactory;
 import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
-import org.springframework.cloud.netflix.zuul.filters.route.apache.HttpClientRibbonCommandFactory;
-import org.springframework.cloud.netflix.zuul.filters.route.okhttp.OkHttpRibbonCommandFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import java.lang.annotation.*;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Dave Syer

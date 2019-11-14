@@ -3,7 +3,10 @@ package com.xie.gateway.cmd.cmd;
 import com.eve.hystrix.extend.CommandSupport;
 import com.eve.hystrix.extend.core.CommandInfo;
 import com.eve.hystrix.extend.core.CommandListener;
+import com.eve.hystrix.extend.core.HystrixFallback;
 import com.netflix.client.config.IClientConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.ribbon.okhttp.OkHttpLoadBalancingClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.route.RibbonCommandContext;
@@ -17,8 +20,8 @@ import org.springframework.http.client.ClientHttpResponse;
  * @author xieyang
  * @date 19/11/10
  */
-public class ReOkHttpRibbonCommand  extends OkHttpRibbonCommand {
-
+public class ReOkHttpRibbonCommand extends OkHttpRibbonCommand implements HystrixFallback<ClientHttpResponse> {
+    protected Logger logger = LoggerFactory.getLogger(getClass());
     private CommandListener commandListener;
 
     private CommandInfo commandInfo;
@@ -51,14 +54,20 @@ public class ReOkHttpRibbonCommand  extends OkHttpRibbonCommand {
             CommandSupport.onSuccess(commandInfo);
             return response;
         }finally {
-            commandListener.onComplete(commandInfo);
+            if (commandListener != null) {
+                try {
+                    commandListener.onComplete(commandInfo);
+                } catch (Throwable throwable) {
+                    logger.warn("command onComplete callback error ", throwable);
+                }
+            }
         }
     }
 
     @Override
     protected ClientHttpResponse getFallbackResponse() {
         try {
-            return super.getFallbackResponse();
+            return getFallbackData();
         }finally {
             CommandSupport.onFailure(commandInfo);
         }
@@ -66,4 +75,8 @@ public class ReOkHttpRibbonCommand  extends OkHttpRibbonCommand {
     }
 
 
+    @Override
+    public ClientHttpResponse getFallbackData() {
+        return super.getFallbackResponse();
+    }
 }

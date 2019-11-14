@@ -31,7 +31,7 @@ public class SendErrorRestFilter extends SendErrorFilter {
 		// 转成json格式输出
 		ResponseBean<Object> failure = ResponseBean.failure(status, throwable.getMessage());
 		// 记录日志
-		logger.warn("zuul后台有个异常", context.getThrowable());
+		logger.warn("zuul后台有个异常", throwable);
 		context.setResponseBody(JSON.toJSONString(failure));
 		context.getResponse().setContentType("application/json;charset=UTF-8");
 		// 处理了异常以后，就清空

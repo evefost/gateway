@@ -2,16 +2,15 @@ package com.eve.hystrix.extend.core;
 
 import com.eve.hystrix.extend.RequestMappingInfo;
 import com.eve.hystrix.extend.XHystrixCommand;
-import com.eve.hystrix.extend.core.CommandListener;
 import com.google.common.base.Throwables;
-
-import java.lang.reflect.Method;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.lang.reflect.Method;
 
 
 /**
@@ -25,6 +24,15 @@ public class HystrixAspect {
 	@Autowired(required = false)
 	private CommandListener listener;
 
+
+	@Autowired(required = false)
+	private HystrixFallback hystrixFallback;
+
+	/**
+	 * @param joinPoint
+	 * @return
+	 * @throws Throwable
+	 */
 	@Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)||@annotation(com.eve.hystrix.extend.XCommand)")
 	public Object methodsAnnotatedWithHystrixCommand(final ProceedingJoinPoint joinPoint) throws Throwable {
 
@@ -33,7 +41,7 @@ public class HystrixAspect {
 		if(requestMappingInfo == null){
 			return joinPoint.proceed();
 		}
-		return new XHystrixCommand(requestMappingInfo, joinPoint.getTarget(), joinPoint.getArgs(),listener).execute();
+		return new XHystrixCommand(requestMappingInfo, joinPoint.getTarget(), joinPoint.getArgs(), hystrixFallback, listener).execute();
 	}
 
 	public static Method getMethodFromTarget(JoinPoint joinPoint) {

@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@ControllerAdvice
+//@ControllerAdvice
 public class PageErrorController extends BasicErrorController {
 
 
@@ -35,7 +34,7 @@ public class PageErrorController extends BasicErrorController {
         ResponseBean<Object> error = ResponseBean.failure(status.value(),body.get("error").toString());
 
 
-        return new ResponseEntity(error, status);
+        return new ResponseEntity(error, HttpStatus.valueOf(200));
     }
 
     @Override

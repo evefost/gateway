@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by xieyang on 19/11/10.
+ *
+ * @author xieyang
+ * @date 19/11/10
  */
 
 public class CommandInfo {
