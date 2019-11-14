@@ -1,6 +1,7 @@
 package com.eve.hystrix.extend;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -8,11 +9,12 @@ import java.util.Map;
  */
 public class RequestMappingInfo {
 
-    public static Map<Method, RequestMappingInfo> methodMappings;
+    public static Map<Method, RequestMappingInfo> methodMappings = new HashMap<>(0);
 
     private Class clazz;
     private Method method;
-    private String appName;
+    private String currentServiceId;
+    private String serviceId;
     private String url;
     private String uri;
     private String requestMethod;
@@ -171,9 +173,7 @@ public class RequestMappingInfo {
         isHystrix = hystrix;
     }
 
-    public String getAppName() {
-        return appName;
-    }
+
 
     public String getUri() {
         return uri;
@@ -183,9 +183,7 @@ public class RequestMappingInfo {
         this.uri = uri;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
+
 
     public String getUrl() {
         return url;
@@ -209,5 +207,21 @@ public class RequestMappingInfo {
 
     public void setRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
+    }
+
+    public String getCurrentServiceId() {
+        return currentServiceId;
+    }
+
+    public void setCurrentServiceId(String currentServiceId) {
+        this.currentServiceId = currentServiceId;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 }

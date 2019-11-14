@@ -53,7 +53,10 @@ public class CommandSupport {
 
     public static void onFailure(CommandInfo commandInfo){
         HystrixCommand command = commandInfo.getCommand();
+        Throwable cause = findCause(command.getFailedExecutionException());
+        commandInfo.setCause(cause);
         commandInfo.setExecuteResultType(getFailureType(command));
+        logger.error("[{}] call [{}->{}] failure[{}]",commandInfo.getCurrentServiceId(),commandInfo.getServiceId(),commandInfo.getUri(),commandInfo.getExecuteResultType(),cause);
         CommandListener listener = commandInfo.getListener();
         if(listener != null){
             try{
@@ -96,6 +99,9 @@ public class CommandSupport {
 
 
     private static Throwable findCause(Throwable root) {
+        if(root == null){
+            return null;
+        }
         Throwable cause = root.getCause();
         if (cause == null) {
             return root;

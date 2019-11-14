@@ -1,8 +1,7 @@
 package com.eve.hystrix.extend.config;
 
-import com.eve.hystrix.extend.MethodScanner;
+import com.eve.hystrix.extend.CommandMethodScanner;
 import com.eve.hystrix.extend.RequestMappingInfo;
-import com.eve.hystrix.extend.core.HystrixAspect;
 import com.eve.hystrix.extend.feign.FeignClientBeanProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +36,12 @@ public class HystrixAutoConfig implements SmartInitializingSingleton {
     }
 
     @Bean
-    MethodScanner getFeignClientScanner(Environment environment){
-        return  new MethodScanner(environment);
+    CommandMethodScanner getFeignClientScanner(Environment environment){
+        return  new CommandMethodScanner(environment);
     }
 
     @Autowired
-    MethodScanner methodScanner;
+    CommandMethodScanner methodScanner;
 
     @Override
     public void afterSingletonsInstantiated() {

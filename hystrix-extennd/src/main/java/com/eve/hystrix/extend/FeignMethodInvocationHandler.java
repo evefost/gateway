@@ -1,8 +1,6 @@
-package com.eve.hystrix.extend.feign;
+package com.eve.hystrix.extend;
 
 
-import com.eve.hystrix.extend.RequestMappingInfo;
-import com.eve.hystrix.extend.XHystrixCommand;
 import com.eve.hystrix.extend.core.CommandListener;
 import com.eve.hystrix.extend.core.HystrixFallback;
 import org.slf4j.Logger;
@@ -23,17 +21,13 @@ public class FeignMethodInvocationHandler implements InvocationHandler, MethodIn
     private Object target;
 
 
-    private String currentAppName;
-
     private HystrixFallback hystrixFallback;
 
     private CommandListener commandListener;
 
 
-    public FeignMethodInvocationHandler(Object target,
-                                        String currentAppName, HystrixFallback hystrixFallback, CommandListener listener) {
+    public FeignMethodInvocationHandler(Object target, HystrixFallback hystrixFallback, CommandListener listener) {
         this.target = target;
-        this.currentAppName = currentAppName;
         this.hystrixFallback = hystrixFallback;
         this.commandListener = listener;
 

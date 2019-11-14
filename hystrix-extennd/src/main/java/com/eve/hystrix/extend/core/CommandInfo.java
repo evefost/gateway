@@ -23,12 +23,21 @@ public class CommandInfo {
 
     private Throwable cause;
 
+    private String currentServiceId;
+
     private String serviceId;
 
     private String uri;
 
+    public String getCurrentServiceId() {
+        return currentServiceId;
+    }
 
-    public void setProperty(String key,Object value){
+    public void setCurrentServiceId(String currentServiceId) {
+        this.currentServiceId = currentServiceId;
+    }
+
+    public void setProperty(String key, Object value){
         properties.put(key,value);
     }
 
@@ -83,4 +92,6 @@ public class CommandInfo {
     public void setListener(CommandListener listener) {
         this.listener = listener;
     }
+
+
 }

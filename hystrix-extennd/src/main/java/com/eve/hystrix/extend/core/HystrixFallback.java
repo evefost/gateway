@@ -8,8 +8,8 @@ package com.eve.hystrix.extend.core;
  * @version 1.0.0
  * @date 2019/11/14
  */
-public interface HystrixFallback<R> {
+public interface HystrixFallback<R,C extends CommandInfo> {
 
-    R getFallbackData();
+    R getFallbackData(C commandInfo);
 
 }

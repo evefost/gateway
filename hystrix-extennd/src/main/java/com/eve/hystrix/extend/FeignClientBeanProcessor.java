@@ -1,7 +1,6 @@
-package com.eve.hystrix.extend.feign;
+package com.eve.hystrix.extend;
 
 
-import com.eve.hystrix.extend.NoHystrix;
 import com.eve.hystrix.extend.core.CommandListener;
 import com.eve.hystrix.extend.core.HystrixFallback;
 import org.slf4j.Logger;
@@ -54,27 +53,23 @@ public class FeignClientBeanProcessor implements BeanPostProcessor {
             throws BeansException {
         Class<?> clazz = bean.getClass();
         if (isCreateControllerProxy(clazz)) {
-            Object proxy = cglibProxy(clazz.getSuperclass(), new FeignMethodInvocationHandler(bean, appName, hystrixFallback, listener));
+            Object proxy = cglibProxy(clazz.getSuperclass(), new FeignMethodInvocationHandler(bean, hystrixFallback, listener));
             if (proxy != null) {
                 return proxy;
             }
             return bean;
         } else if (isCreateFeignProxy(clazz)) {
             Object proxy = Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(),
-                    new FeignMethodInvocationHandler(bean, appName, hystrixFallback, listener));
+                    new FeignMethodInvocationHandler(bean,hystrixFallback, listener));
             return proxy;
         }
         return bean;
     }
 
-    private boolean isCreateProxy(Class<?> clazz) {
-        if (isCreateControllerProxy(clazz)) {
-            return true;
-        }
-        return isCreateFeignProxy(clazz);
-    }
+
 
     private boolean isCreateControllerProxy(Class<?> clazz) {
+
 //        Controller annotation = AnnotationUtils.findAnnotation(clazz, Controller.class);
 //        if (annotation != null) {
 //            if(clazz.getPackage().getName().startsWith("com.xhg")){

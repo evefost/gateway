@@ -41,12 +41,13 @@ public class XHystrixCommand extends HystrixCommand<Object> {
         this.commandListener = listener;
         this.defaultFallback = defaultFallback;
         this.commandInfo = CommandSupport.buildCommandInfo(this, this.commandListener);
-        this.commandInfo.setServiceId(mappingInfo.getAppName());
+        this.commandInfo.setServiceId(mappingInfo.getServiceId());
+        this.commandInfo.setCurrentServiceId(mappingInfo.getCurrentServiceId());
         this.commandInfo.setUri(mappingInfo.getUrl());
     }
 
     public static Setter createSetter(RequestMappingInfo mappingInfo) {
-        String groupKey = mappingInfo.getAppName();
+        String groupKey = mappingInfo.getServiceId();
         String commandKey = mappingInfo.getUrl();
         HystrixCommandProperties.Setter commandProperties = HystrixCommandProperties.Setter();
         if (mappingInfo.getExecutionTimeoutInMilliseconds() != null) {
@@ -99,11 +100,8 @@ public class XHystrixCommand extends HystrixCommand<Object> {
 
     @Override
     protected Object getFallback() {
-        try {
-            return processFallback();
-        } finally {
-            CommandSupport.onFailure(commandInfo);
-        }
+        CommandSupport.onFailure(commandInfo);
+        return processFallback();
     }
 
 
@@ -122,8 +120,11 @@ public class XHystrixCommand extends HystrixCommand<Object> {
                 logger.error("用户自定义fallback:{}失败:", mappingInfo.getMethod().toString(), e);
             }
         }
-        if (result == null && defaultFallback != null) {
-            return defaultFallback.getFallbackData();
+        if (result != null) {
+            return result;
+        }
+        if (defaultFallback != null) {
+            return defaultFallback.getFallbackData(commandInfo);
         }
         return super.getFallback();
     }
