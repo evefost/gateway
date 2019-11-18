@@ -1,8 +1,9 @@
 package com.eve.hystrix.extend.config;
 
 import com.eve.hystrix.extend.CommandMethodScanner;
+import com.eve.hystrix.extend.FeignClientBeanProcessor;
+import com.eve.hystrix.extend.HystrixAspect;
 import com.eve.hystrix.extend.RequestMappingInfo;
-import com.eve.hystrix.extend.feign.FeignClientBeanProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;

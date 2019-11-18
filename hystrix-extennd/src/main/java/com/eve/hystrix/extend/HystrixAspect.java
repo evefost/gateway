@@ -1,7 +1,5 @@
-package com.eve.hystrix.extend.config;
+package com.eve.hystrix.extend;
 
-import com.eve.hystrix.extend.RequestMappingInfo;
-import com.eve.hystrix.extend.XHystrixCommand;
 import com.eve.hystrix.extend.core.CommandListener;
 import com.eve.hystrix.extend.core.HystrixFallback;
 import com.google.common.base.Throwables;
@@ -35,7 +33,7 @@ public class HystrixAspect {
 	 * @return
 	 * @throws Throwable
 	 */
-	@Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)||@annotation(com.eve.hystrix.extend.core.XCommand)")
+	@Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	public Object methodsAnnotatedWithHystrixCommand(final ProceedingJoinPoint joinPoint) throws Throwable {
 
 		Method method = getMethodFromTarget(joinPoint);

@@ -1,6 +1,6 @@
 package com.xhg.server.a;
 
-import com.eve.hystrix.extend.XCommand;
+import com.eve.hystrix.extend.core.XCommand;
 import com.xhg.test.common.UserBean;
 import feign.FeignClientConfigRefresh;
 import org.springframework.beans.BeansException;
